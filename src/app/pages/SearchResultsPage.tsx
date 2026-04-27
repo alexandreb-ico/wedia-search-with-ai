@@ -273,23 +273,6 @@ function FilterBar() {
 
 // ─── Asset cards ──────────────────────────────────────────────────────────────
 
-function AssetCardSelected() {
-  return (
-    <div className="border-[3px] border-[#3377ff] flex flex-col items-start relative rounded-[4px] shrink-0 size-[243px] overflow-hidden">
-      <img alt="" className="absolute inset-0 object-cover size-full" src={imgAsset} />
-      <div className="flex flex-1 items-start gap-[8px] p-[16px] relative rounded-[4px] w-full border border-[#f8f8f8]">
-        <div className="flex flex-1 items-center gap-[8px] min-w-0">
-          <div className="bg-[#1b55f5] flex items-center justify-center p-[3px] rounded-full shrink-0 size-[20px]">
-            <Check size={12} color="white" strokeWidth={2.5} />
-          </div>
-        </div>
-        <StatusDot />
-      </div>
-    </div>
-  );
-}
-
-
 function AssetCardDigitalTemplate() {
   return (
     <div className="flex flex-col items-start relative rounded-[4px] shrink-0 size-[243px] overflow-hidden">
@@ -313,7 +296,23 @@ function AssetCardDigitalTemplate() {
   );
 }
 
-function AssetCardDefault() {
+function AssetCard() {
+  const [selected, setSelected] = React.useState(false);
+
+  if (selected) {
+    return (
+      <div className="border-[3px] border-[#3377ff] relative rounded-[4px] shrink-0 size-[243px] overflow-hidden cursor-pointer" onClick={() => setSelected(false)}>
+        <img alt="" className="absolute inset-0 object-cover size-full" src={imgAsset} />
+        <div className="absolute inset-0 flex items-start justify-between p-[16px]">
+          <div className="bg-[#1b55f5] flex items-center justify-center rounded-full shrink-0 size-[20px]">
+            <Check size={12} color="white" strokeWidth={2.5} />
+          </div>
+          <StatusDot />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="group relative rounded-[4px] shrink-0 size-[243px] overflow-hidden cursor-pointer">
       <img alt="" className="absolute inset-0 object-cover size-full" src={imgAsset} />
@@ -327,7 +326,10 @@ function AssetCardDefault() {
       <div className="absolute inset-0 bg-[rgba(30,30,30,0.5)] flex flex-col justify-between p-[16px] rounded-[4px] opacity-0 group-hover:opacity-100 transition-opacity">
         <div className="flex gap-[8px] items-start w-full">
           <div className="flex flex-1 gap-[8px] items-center min-w-0">
-            <div className="border border-white rounded-full shrink-0 size-[20px]" />
+            <button
+              onClick={() => setSelected(true)}
+              className="border border-white rounded-full shrink-0 size-[20px] hover:bg-white/20 transition-colors"
+            />
             <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-white text-[14px] leading-[18px] truncate">
               Asset name
             </span>
@@ -399,11 +401,10 @@ export default function SearchResultsPage() {
 
         {/* Asset grid */}
         <div className="flex flex-wrap gap-[16px] items-start w-full">
-          <AssetCardSelected />
+          <AssetCard />
           <AssetCardDigitalTemplate />
-          <AssetCardDefault />
           {Array.from({ length: TOTAL_ASSETS }).map((_, i) => (
-            <AssetCardDefault key={i} />
+            <AssetCard key={i} />
           ))}
         </div>
       </div>
