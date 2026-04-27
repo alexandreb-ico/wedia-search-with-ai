@@ -75,9 +75,9 @@ function SearchBar() {
   const [query, setQuery] = useState("");
 
   return (
-    <div className="bg-[#f8f8f8] flex items-center p-[4px] rounded-[4px] shrink-0 w-[800px] relative z-10">
+    <div className="bg-[#f8f8f8] flex items-center p-[4px] h-[48px] rounded-[4px] shrink-0 w-[800px] relative z-10">
       {/* Search in selector */}
-      <button className="flex gap-[20px] h-[40px] items-center justify-center pl-[16px] pr-[12px] py-[12px] rounded-[4px] shrink-0">
+      <button className="flex gap-[20px] h-full items-center justify-center pl-[16px] pr-[12px] rounded-[4px] shrink-0">
         <div className="flex gap-[4px] items-center">
           <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#767676] text-[14px] leading-normal whitespace-nowrap">
             Search in :
@@ -94,7 +94,7 @@ function SearchBar() {
       </button>
 
       {/* Text input */}
-      <div className="flex flex-1 items-center gap-[8px] h-[40px] px-[12px]">
+      <div className="flex flex-1 items-center gap-[8px] h-full px-[12px]">
         <Search size={16} color="#646464" strokeWidth={1.5} className="shrink-0" />
         <input
           type="text"
@@ -108,7 +108,7 @@ function SearchBar() {
 
       {/* Search button */}
       <button className="bg-[#1b55f5] flex items-center justify-center min-h-[48px] px-[24px] py-[16px] rounded-[4px] shrink-0 hover:bg-[#1445d4] transition-colors">
-        <span style={{ fontFamily: "'Satoshi-Bold', sans-serif", fontWeight: 700 }} className="text-white text-[16px] leading-[20px] whitespace-nowrap">
+        <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-white text-[16px] leading-[20px] whitespace-nowrap">
           Search
         </span>
       </button>
