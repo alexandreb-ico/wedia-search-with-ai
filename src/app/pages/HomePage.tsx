@@ -100,7 +100,9 @@ function SearchBar() {
 
   function handleSearch() {
     if (query.trim()) {
-      navigate(`/search?q=${encodeURIComponent(query.trim())}`);
+      const params = new URLSearchParams({ q: query.trim() });
+      if (smartSearch) params.set("smart", "1");
+      navigate(`/search?${params.toString()}`);
     }
   }
 

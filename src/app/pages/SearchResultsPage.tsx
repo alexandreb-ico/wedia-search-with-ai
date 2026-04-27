@@ -81,13 +81,16 @@ function StatusDot() {
 interface NavigationProps {
   query: string;
   resultCount: number;
+  smartSearch: boolean;
+  onSmartSearchChange: (v: boolean) => void;
   onQueryChange: (q: string) => void;
   onSearch: () => void;
 }
 
-function Navigation({ query, resultCount, onQueryChange, onSearch }: NavigationProps) {
-  const [smartSearch, setSmartSearch] = React.useState(false);
-  const [typedPlaceholder, setTypedPlaceholder] = React.useState(PLACEHOLDER_OFF);
+function Navigation({ query, resultCount, smartSearch, onSmartSearchChange, onQueryChange, onSearch }: NavigationProps) {
+  const [typedPlaceholder, setTypedPlaceholder] = React.useState(
+    smartSearch ? PLACEHOLDER_ON : PLACEHOLDER_OFF
+  );
   const [isTyping, setIsTyping] = React.useState(false);
 
   React.useEffect(() => {
@@ -135,7 +138,7 @@ function Navigation({ query, resultCount, onQueryChange, onSearch }: NavigationP
             <div className="flex flex-1 items-center gap-[8px] h-[40px] px-[12px] min-w-0">
               {/* Pill */}
               <button
-                onClick={() => setSmartSearch((v) => !v)}
+                onClick={() => onSmartSearchChange(!smartSearch)}
                 className="relative flex gap-[5px] h-[28px] items-center px-[8px] py-[4px] rounded-full shrink-0 overflow-hidden"
                 style={{
                   borderWidth: 1, borderStyle: "solid",
@@ -549,11 +552,14 @@ export default function SearchResultsPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [query, setQuery] = React.useState(searchParams.get("q") ?? "");
+  const [smartSearch, setSmartSearch] = React.useState(searchParams.get("smart") === "1");
   const [selectedIds, setSelectedIds] = React.useState<Set<number>>(new Set());
 
   function handleSearch() {
     if (query.trim()) {
-      navigate(`/search?q=${encodeURIComponent(query.trim())}`);
+      const params = new URLSearchParams({ q: query.trim() });
+      if (smartSearch) params.set("smart", "1");
+      navigate(`/search?${params.toString()}`);
     }
   }
 
@@ -579,6 +585,8 @@ export default function SearchResultsPage() {
       <Navigation
         query={query}
         resultCount={533}
+        smartSearch={smartSearch}
+        onSmartSearchChange={setSmartSearch}
         onQueryChange={setQuery}
         onSearch={handleSearch}
       />
