@@ -107,7 +107,7 @@ function SearchBar() {
       </div>
 
       {/* Search button */}
-      <button className="bg-[#1b55f5] flex items-center justify-center min-h-[48px] px-[24px] py-[16px] rounded-[4px] shrink-0 hover:bg-[#1445d4] transition-colors">
+      <button className="bg-[#1b55f5] flex items-center justify-center self-stretch px-[24px] rounded-[4px] shrink-0 hover:bg-[#1445d4] transition-colors">
         <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-white text-[16px] leading-[20px] whitespace-nowrap">
           Search
         </span>
