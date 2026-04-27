@@ -54,7 +54,7 @@ function Navigation() {
       <div className="flex gap-[24px] items-center justify-end shrink-0">
         <Wediatransfer />
         <Divider />
-        <div className="flex gap-[24px] items-center shrink-0 text-[#1e1e1e] text-[16px] text-center whitespace-nowrap" style={{ fontFamily: "'Satoshi-Bold', sans-serif", fontWeight: 700 }}>
+        <div className="flex gap-[24px] items-center shrink-0 text-[#1e1e1e] text-[16px] text-center whitespace-nowrap" style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }}>
           <p>{`Boards & Portals`}</p>
           <p>Upload assets</p>
           <Link to="/workspace" className="hover:text-[#1b55f5] transition-colors">
