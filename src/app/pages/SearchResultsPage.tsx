@@ -371,7 +371,6 @@ function AssetCardDigitalTemplate({ selected, onToggle }: AssetCardDigitalTempla
           <StatusDot />
         </div>
         <div className="flex gap-[8px] items-start w-full">
-          <DigitalTemplateBadge />
           <button className="bg-white flex flex-1 gap-[6px] items-center justify-center min-h-[32px] p-[8px] rounded-[4px]">
             <Plus size={16} color="#1e1e1e" strokeWidth={1.5} />
             <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#1e1e1e] text-[14px] leading-[18px] whitespace-nowrap">
