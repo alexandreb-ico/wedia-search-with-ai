@@ -293,7 +293,7 @@ function AssetCardHovered() {
   return (
     <div className="flex flex-col items-start relative rounded-[4px] shrink-0 size-[243px] overflow-hidden">
       <img alt="" className="absolute inset-0 object-cover size-full" src={imgAsset} />
-      <div className="bg-[rgba(30,30,30,0.5)] flex flex-col flex-1 justify-between p-[16px] relative rounded-[4px] w-full">
+      <div className="absolute inset-0 bg-[rgba(30,30,30,0.5)] flex flex-col justify-between p-[16px] rounded-[4px]">
         {/* Top row */}
         <div className="flex gap-[8px] items-start w-full">
           <div className="flex flex-1 gap-[8px] items-center min-w-0">
