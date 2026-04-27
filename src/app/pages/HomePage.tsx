@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
-import { Bell, ChevronDown, Menu, Sparkles } from "lucide-react";
+import { Bell, ChevronDown, Menu } from "lucide-react";
+import imgSmartSearchIcon from "../../imports/HomePage/smart-search-icon.svg";
 import svgPaths from "../../imports/DesktopWorkspacesInsideAWorkspaceAssetSelected/svg-qymjkh6ysf";
 import imgHeader from "../../imports/HomePage/header-bg.jpg";
 import imgLogoWhite from "../../imports/HomePage/logo-wedia-white.svg";
@@ -95,13 +96,20 @@ function SearchBar() {
         {/* Smart Search pill */}
         <button
           onClick={() => setSmartSearch((v) => !v)}
-          className="flex gap-[6px] h-[32px] items-center px-[8px] py-[4px] rounded-full shrink-0 border transition-all"
+          className={`flex gap-[6px] h-[32px] items-center px-[8px] py-[4px] rounded-full shrink-0 border transition-all ${
+            smartSearch ? "border-[#dbe4fd]" : "border-[#c4c4c4]"
+          }`}
           style={smartSearch
-            ? { borderColor: "#dbe4fd", background: "linear-gradient(100.3deg, rgba(219,228,253,0.5) 0.23%, rgba(252,224,254,0.5) 100%)" }
-            : { borderColor: "#c4c4c4", background: "transparent" }
+            ? { background: "linear-gradient(100.3deg, rgba(219,228,253,0.5) 0.23%, rgba(252,224,254,0.5) 100%)" }
+            : { background: "transparent" }
           }
         >
-          <Sparkles size={16} color={smartSearch ? "#1e1e1e" : "#c4c4c4"} strokeWidth={1.5} />
+          <img
+            src={imgSmartSearchIcon}
+            alt=""
+            className="shrink-0 size-[16px]"
+            style={smartSearch ? {} : { filter: "grayscale(1) opacity(0.4)" }}
+          />
           <span
             style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }}
             className={`text-[14px] leading-[18px] whitespace-nowrap transition-colors ${smartSearch ? "text-[#1e1e1e]" : "text-[#c4c4c4]"}`}
