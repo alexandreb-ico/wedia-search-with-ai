@@ -85,34 +85,52 @@ function SearchBar() {
 
   return (
     <div
-      className="flex items-center p-[4px] h-[56px] rounded-[4px] shrink-0 w-[800px] relative z-10 transition-colors border-2"
-      style={smartSearch
-        ? { background: "white", borderColor: "#dbe4fd" }
-        : { background: "#f8f8f8", borderColor: "white" }
-      }
+      className="flex items-center p-[4px] h-[56px] rounded-[4px] shrink-0 w-[800px] relative z-10 border-2"
+      style={{
+        background: smartSearch ? "white" : "#f8f8f8",
+        borderColor: smartSearch ? "#dbe4fd" : "white",
+        transition: "background 300ms ease, border-color 300ms ease",
+      }}
     >
       {/* Left: Smart Search pill + text input */}
       <div className="flex flex-1 gap-[12px] h-full items-center min-w-0 px-[8px]">
         {/* Smart Search pill */}
         <button
           onClick={() => setSmartSearch((v) => !v)}
-          className={`flex gap-[6px] h-[32px] items-center px-[8px] py-[4px] rounded-full shrink-0 border transition-all ${
-            smartSearch ? "border-[#dbe4fd]" : "border-[#c4c4c4]"
-          }`}
-          style={smartSearch
-            ? { background: "linear-gradient(100.3deg, rgba(219,228,253,0.5) 0.23%, rgba(252,224,254,0.5) 100%)" }
-            : { background: "transparent" }
-          }
+          className="relative flex gap-[6px] h-[32px] items-center px-[8px] py-[4px] rounded-full shrink-0 overflow-hidden"
+          style={{
+            borderWidth: 1,
+            borderStyle: "solid",
+            borderColor: smartSearch ? "#dbe4fd" : "#c4c4c4",
+            transition: "border-color 300ms ease",
+          }}
         >
+          {/* Gradient background — always present, fades in/out */}
+          <div
+            className="absolute inset-0 rounded-full pointer-events-none"
+            style={{
+              background: "linear-gradient(100.3deg, rgba(219,228,253,0.5) 0.23%, rgba(252,224,254,0.5) 100%)",
+              opacity: smartSearch ? 1 : 0,
+              transition: "opacity 300ms ease",
+            }}
+          />
           <img
             src={imgSmartSearchIcon}
             alt=""
-            className="shrink-0 size-[16px]"
-            style={smartSearch ? {} : { filter: "grayscale(1) opacity(0.4)" }}
+            className="relative shrink-0 size-[16px]"
+            style={{
+              filter: smartSearch ? "none" : "grayscale(1) opacity(0.4)",
+              transition: "filter 300ms ease",
+            }}
           />
           <span
-            style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }}
-            className={`text-[14px] leading-[18px] whitespace-nowrap transition-colors ${smartSearch ? "text-[#1e1e1e]" : "text-[#c4c4c4]"}`}
+            style={{
+              fontFamily: "'Satoshi-Medium', sans-serif",
+              fontWeight: 500,
+              color: smartSearch ? "#1e1e1e" : "#c4c4c4",
+              transition: "color 300ms ease",
+            }}
+            className="relative text-[14px] leading-[18px] whitespace-nowrap"
           >
             Smart Search
           </span>
