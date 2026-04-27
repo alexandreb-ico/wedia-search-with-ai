@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { Bell, ChevronDown, Menu, Search } from "lucide-react";
 import svgPaths from "../../imports/DesktopWorkspacesInsideAWorkspaceAssetSelected/svg-qymjkh6ysf";
 import imgHeader from "../../imports/HomePage/header-bg.jpg";
@@ -73,6 +73,13 @@ function Navigation() {
 
 function SearchBar() {
   const [query, setQuery] = useState("");
+  const navigate = useNavigate();
+
+  function handleSearch() {
+    if (query.trim()) {
+      navigate(`/search?q=${encodeURIComponent(query.trim())}`);
+    }
+  }
 
   return (
     <div className="bg-[#f8f8f8] flex items-center p-[4px] h-[56px] rounded-[4px] shrink-0 w-[800px] relative z-10">
@@ -100,6 +107,7 @@ function SearchBar() {
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleSearch()}
           placeholder="Search"
           className="flex-1 bg-transparent outline-none text-[16px] text-[#646464] placeholder:text-[#646464]"
           style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }}
@@ -107,7 +115,7 @@ function SearchBar() {
       </div>
 
       {/* Search button */}
-      <button className="bg-[#1b55f5] flex items-center justify-center self-stretch px-[24px] rounded-[4px] shrink-0 hover:bg-[#1445d4] transition-colors">
+      <button onClick={handleSearch} className="bg-[#1b55f5] flex items-center justify-center self-stretch px-[24px] rounded-[4px] shrink-0 hover:bg-[#1445d4] transition-colors">
         <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-white text-[16px] leading-[20px] whitespace-nowrap">
           Search
         </span>
