@@ -75,7 +75,7 @@ function SearchBar() {
   const [query, setQuery] = useState("");
 
   return (
-    <div className="bg-[#f8f8f8] flex items-center p-[4px] h-[48px] rounded-[4px] shrink-0 w-[800px] relative z-10">
+    <div className="bg-[#f8f8f8] flex items-center p-[4px] h-[56px] rounded-[4px] shrink-0 w-[800px] relative z-10">
       {/* Search in selector */}
       <button className="flex gap-[20px] h-full items-center justify-center pl-[16px] pr-[12px] rounded-[4px] shrink-0">
         <div className="flex gap-[4px] items-center">
