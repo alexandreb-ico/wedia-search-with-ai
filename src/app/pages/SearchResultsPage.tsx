@@ -4,7 +4,6 @@ import {
   Bell,
   Menu,
   ChevronDown,
-  Search,
   X,
   SlidersHorizontal,
   Star,
@@ -25,6 +24,10 @@ import {
 import svgPaths from "../../imports/DesktopWorkspacesInsideAWorkspaceAssetSelected/svg-qymjkh6ysf";
 import imgAsset from "../../imports/HomePage/asset-placeholder.jpg";
 import imgLogoDark from "../../imports/HomePage/logo-wedia-dark.svg";
+import imgSmartSearchIcon from "../../imports/HomePage/smart-search-icon.svg";
+
+const PLACEHOLDER_OFF = "Find assets by keywords...";
+const PLACEHOLDER_ON = "Describe what you're looking for...";
 
 // ─── Shared primitives ────────────────────────────────────────────────────────
 
@@ -83,6 +86,23 @@ interface NavigationProps {
 }
 
 function Navigation({ query, resultCount, onQueryChange, onSearch }: NavigationProps) {
+  const [smartSearch, setSmartSearch] = React.useState(false);
+  const [typedPlaceholder, setTypedPlaceholder] = React.useState(PLACEHOLDER_OFF);
+  const [isTyping, setIsTyping] = React.useState(false);
+
+  React.useEffect(() => {
+    const target = smartSearch ? PLACEHOLDER_ON : PLACEHOLDER_OFF;
+    setTypedPlaceholder("");
+    setIsTyping(true);
+    let i = 0;
+    const timer = setInterval(() => {
+      i++;
+      setTypedPlaceholder(target.slice(0, i));
+      if (i >= target.length) { clearInterval(timer); setIsTyping(false); }
+    }, 32);
+    return () => clearInterval(timer);
+  }, [smartSearch]);
+
   return (
     <div className="bg-white flex h-[72px] items-center justify-between px-[40px] py-[12px] shrink-0 sticky top-0 w-full z-10">
       {/* Left: logo + inline search */}
@@ -111,17 +131,65 @@ function Navigation({ query, resultCount, onQueryChange, onSearch }: NavigationP
               </div>
             </div>
 
-            {/* Search input */}
+            {/* Smart Search pill + input */}
             <div className="flex flex-1 items-center gap-[8px] h-[40px] px-[12px] min-w-0">
-              <Search size={16} color="#646464" strokeWidth={1.5} className="shrink-0" />
-              <input
-                type="text"
-                value={query}
-                onChange={(e) => onQueryChange(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && onSearch()}
-                className="flex-1 bg-transparent outline-none text-[16px] text-[#1e1e1e] min-w-0"
-                style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }}
-              />
+              {/* Pill */}
+              <button
+                onClick={() => setSmartSearch((v) => !v)}
+                className="relative flex gap-[5px] h-[28px] items-center px-[8px] py-[4px] rounded-full shrink-0 overflow-hidden"
+                style={{
+                  borderWidth: 1, borderStyle: "solid",
+                  borderColor: smartSearch ? "#dbe4fd" : "#c4c4c4",
+                  transition: "border-color 300ms ease",
+                }}
+              >
+                <div
+                  className="absolute inset-0 rounded-full pointer-events-none"
+                  style={{
+                    background: "linear-gradient(100.3deg, rgba(219,228,253,0.5) 0.23%, rgba(252,224,254,0.5) 100%)",
+                    opacity: smartSearch ? 1 : 0,
+                    transition: "opacity 300ms ease",
+                  }}
+                />
+                <img
+                  src={imgSmartSearchIcon}
+                  alt=""
+                  className="relative shrink-0 size-[14px]"
+                  style={{ filter: smartSearch ? "none" : "grayscale(1) opacity(0.4)", transition: "filter 300ms ease" }}
+                />
+                <span
+                  className="relative text-[12px] leading-[16px] whitespace-nowrap"
+                  style={{
+                    fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500,
+                    color: smartSearch ? "#1e1e1e" : "#c4c4c4",
+                    transition: "color 300ms ease",
+                  }}
+                >
+                  Smart Search
+                </span>
+              </button>
+
+              {/* Input with typewriter placeholder */}
+              <div className="relative flex-1 min-w-0 flex items-center h-full">
+                <input
+                  type="text"
+                  value={query}
+                  onChange={(e) => onQueryChange(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && onSearch()}
+                  className="w-full bg-transparent outline-none text-[16px] text-[#1e1e1e] min-w-0"
+                  style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }}
+                />
+                {!query && (
+                  <span
+                    className="absolute inset-0 flex items-center pointer-events-none select-none overflow-hidden whitespace-nowrap text-[16px] text-[#646464]"
+                    style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }}
+                  >
+                    {typedPlaceholder}
+                    {isTyping && <span className="ml-px opacity-70 animate-pulse">|</span>}
+                  </span>
+                )}
+              </div>
+
               {query && (
                 <button onClick={() => onQueryChange("")} className="shrink-0 p-[8px] rounded hover:bg-[#f8f8f8]">
                   <X size={16} color="#1e1e1e" strokeWidth={1.5} />
