@@ -304,24 +304,84 @@ function FilterBar({ selectedCount, onSelectAll, onUnselectAll }: FilterBarProps
 
 // ─── Asset cards ──────────────────────────────────────────────────────────────
 
-function AssetCardDigitalTemplate() {
+function DigitalTemplateBadge() {
   return (
-    <div className="flex flex-col items-start relative rounded-[4px] shrink-0 size-[243px] overflow-hidden">
+    <button className="bg-[#1b55f5] flex gap-[6px] items-center min-h-[32px] p-[8px] rounded-[4px] shrink-0">
+      <Star size={16} color="white" strokeWidth={1.5} fill="white" />
+      <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-white text-[14px] leading-[18px] whitespace-nowrap">
+        Digital template
+      </span>
+    </button>
+  );
+}
+
+interface AssetCardDigitalTemplateProps {
+  selected: boolean;
+  onToggle: () => void;
+}
+
+function AssetCardDigitalTemplate({ selected, onToggle }: AssetCardDigitalTemplateProps) {
+  if (selected) {
+    return (
+      <div className="border-[3px] border-[#3377ff] relative rounded-[4px] shrink-0 size-[243px] overflow-hidden cursor-pointer" onClick={onToggle}>
+        <img alt="" className="absolute inset-0 object-cover size-full" src={imgAsset} />
+        <div className="absolute inset-0 flex flex-col items-start justify-between p-[16px]">
+          <div className="flex items-start justify-between w-full">
+            <div className="bg-[#1b55f5] flex items-center justify-center rounded-full shrink-0 size-[20px]">
+              <Check size={12} color="white" strokeWidth={2.5} />
+            </div>
+            <div className="flex gap-[8px] items-center">
+              <Pencil size={16} color="white" strokeWidth={1.5} />
+              <Flag size={16} color="white" strokeWidth={1.5} />
+              <Copy size={16} color="white" strokeWidth={1.5} />
+              <CornerUpRight size={16} color="white" strokeWidth={1.5} />
+              <Trash2 size={16} color="white" strokeWidth={1.5} />
+            </div>
+          </div>
+          <DigitalTemplateBadge />
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="group relative rounded-[4px] shrink-0 size-[243px] overflow-hidden cursor-pointer">
       <img alt="" className="absolute inset-0 object-cover size-full" src={imgAsset} />
-      <div className="flex flex-col flex-1 items-start justify-between p-[16px] relative rounded-[4px] w-full">
-        <div className="flex w-full">
-          <div className="flex flex-1 items-center gap-[8px] min-w-0 opacity-0">
-            <div className="border border-white rounded-full shrink-0 size-[20px]" />
-            <span className="text-white text-[14px] truncate">Asset name</span>
+
+      {/* Default: status dot + badge */}
+      <div className="absolute inset-0 flex flex-col items-start justify-between p-[16px] group-hover:opacity-0 transition-opacity">
+        <div className="flex w-full justify-end">
+          <StatusDot />
+        </div>
+        <DigitalTemplateBadge />
+      </div>
+
+      {/* Hover overlay */}
+      <div className="absolute inset-0 bg-[rgba(30,30,30,0.5)] flex flex-col justify-between p-[16px] rounded-[4px] opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="flex gap-[8px] items-start w-full">
+          <div className="flex flex-1 gap-[8px] items-center min-w-0">
+            <button
+              onClick={(e) => { e.stopPropagation(); onToggle(); }}
+              className="border border-white rounded-full shrink-0 size-[20px] hover:bg-white/20 transition-colors"
+            />
+            <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-white text-[14px] leading-[18px] truncate">
+              Asset name
+            </span>
           </div>
           <StatusDot />
         </div>
-        <button className="bg-[#1b55f5] flex gap-[6px] items-center min-h-[32px] p-[8px] rounded-[4px] shrink-0">
-          <Star size={16} color="white" strokeWidth={1.5} fill="white" />
-          <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-white text-[14px] leading-[18px] whitespace-nowrap">
-            Digital template
-          </span>
-        </button>
+        <div className="flex gap-[8px] items-start w-full">
+          <DigitalTemplateBadge />
+          <button className="bg-white flex flex-1 gap-[6px] items-center justify-center min-h-[32px] p-[8px] rounded-[4px]">
+            <Plus size={16} color="#1e1e1e" strokeWidth={1.5} />
+            <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#1e1e1e] text-[14px] leading-[18px] whitespace-nowrap">
+              Add to
+            </span>
+          </button>
+          <button className="bg-[#646464] flex items-center justify-center p-[8px] rounded-[4px] shrink-0">
+            <Ellipsis size={16} color="white" strokeWidth={1.5} />
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -414,7 +474,9 @@ function Footer() {
   );
 }
 
-const TOTAL_CARDS = 18;
+// IDs: 0 = first AssetCard, 1 = digital template, 2..N = remaining AssetCards
+const EXTRA_CARDS = 17;
+const ALL_IDS = [0, 1, ...Array.from({ length: EXTRA_CARDS }, (_, i) => i + 2)];
 
 export default function SearchResultsPage() {
   const [searchParams] = useSearchParams();
@@ -438,7 +500,7 @@ export default function SearchResultsPage() {
   }
 
   function selectAll() {
-    setSelectedIds(new Set(Array.from({ length: TOTAL_CARDS }, (_, i) => i)));
+    setSelectedIds(new Set(ALL_IDS));
   }
 
   function unselectAll() {
@@ -464,9 +526,9 @@ export default function SearchResultsPage() {
         {/* Asset grid */}
         <div className="flex flex-wrap gap-[16px] items-start w-full">
           <AssetCard selected={selectedIds.has(0)} onToggle={() => toggleCard(0)} />
-          <AssetCardDigitalTemplate />
-          {Array.from({ length: TOTAL_CARDS - 1 }).map((_, i) => (
-            <AssetCard key={i + 1} selected={selectedIds.has(i + 1)} onToggle={() => toggleCard(i + 1)} />
+          <AssetCardDigitalTemplate selected={selectedIds.has(1)} onToggle={() => toggleCard(1)} />
+          {Array.from({ length: EXTRA_CARDS }).map((_, i) => (
+            <AssetCard key={i + 2} selected={selectedIds.has(i + 2)} onToggle={() => toggleCard(i + 2)} />
           ))}
         </div>
       </div>
