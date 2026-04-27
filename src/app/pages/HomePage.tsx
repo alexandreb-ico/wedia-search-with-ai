@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router";
 import { Bell, ChevronDown, Menu } from "lucide-react";
 import imgSmartSearchIcon from "../../imports/HomePage/smart-search-icon.svg";
@@ -72,10 +72,31 @@ function Navigation() {
   );
 }
 
+const PLACEHOLDER_OFF = "Find assets by keywords...";
+const PLACEHOLDER_ON = "Describe what you're looking for...";
+
 function SearchBar() {
   const [query, setQuery] = useState("");
   const [smartSearch, setSmartSearch] = useState(false);
+  const [typedPlaceholder, setTypedPlaceholder] = useState(PLACEHOLDER_OFF);
+  const [isTyping, setIsTyping] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const target = smartSearch ? PLACEHOLDER_ON : PLACEHOLDER_OFF;
+    setTypedPlaceholder("");
+    setIsTyping(true);
+    let i = 0;
+    const timer = setInterval(() => {
+      i++;
+      setTypedPlaceholder(target.slice(0, i));
+      if (i >= target.length) {
+        clearInterval(timer);
+        setIsTyping(false);
+      }
+    }, 32);
+    return () => clearInterval(timer);
+  }, [smartSearch]);
 
   function handleSearch() {
     if (query.trim()) {
@@ -136,16 +157,28 @@ function SearchBar() {
           </span>
         </button>
 
-        {/* Text input */}
-        <input
-          type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-          placeholder={smartSearch ? "Describe what you're looking for..." : "Find assets by keywords..."}
-          className="flex-1 bg-transparent outline-none text-[16px] text-[#646464] placeholder:text-[#646464] min-w-0"
-          style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }}
-        />
+        {/* Text input with typewriter placeholder */}
+        <div className="relative flex-1 min-w-0 flex items-center h-full">
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+            className="w-full bg-transparent outline-none text-[16px] text-[#646464] min-w-0"
+            style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }}
+          />
+          {!query && (
+            <span
+              className="absolute inset-0 flex items-center pointer-events-none select-none overflow-hidden whitespace-nowrap text-[16px] text-[#646464]"
+              style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }}
+            >
+              {typedPlaceholder}
+              {isTyping && (
+                <span className="ml-px opacity-70 animate-pulse">|</span>
+              )}
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Right: Search in selector + Search button */}
