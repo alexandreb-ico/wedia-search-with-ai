@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
-import { Bell, ChevronDown, Menu, Search } from "lucide-react";
+import { Bell, ChevronDown, Menu, Sparkles } from "lucide-react";
 import svgPaths from "../../imports/DesktopWorkspacesInsideAWorkspaceAssetSelected/svg-qymjkh6ysf";
 import imgHeader from "../../imports/HomePage/header-bg.jpg";
 import imgLogoWhite from "../../imports/HomePage/logo-wedia-white.svg";
@@ -73,6 +73,7 @@ function Navigation() {
 
 function SearchBar() {
   const [query, setQuery] = useState("");
+  const [smartSearch, setSmartSearch] = useState(false);
   const navigate = useNavigate();
 
   function handleSearch() {
@@ -82,44 +83,71 @@ function SearchBar() {
   }
 
   return (
-    <div className="bg-[#f8f8f8] flex items-center p-[4px] h-[56px] rounded-[4px] shrink-0 w-[800px] relative z-10">
-      {/* Search in selector */}
-      <button className="flex gap-[20px] h-full items-center justify-center pl-[16px] pr-[12px] rounded-[4px] shrink-0">
-        <div className="flex gap-[4px] items-center">
-          <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#767676] text-[14px] leading-normal whitespace-nowrap">
-            Search in :
+    <div
+      className="flex items-center p-[4px] h-[56px] rounded-[4px] shrink-0 w-[800px] relative z-10 transition-colors"
+      style={smartSearch
+        ? { background: "white", border: "2px solid #dbe4fd" }
+        : { background: "#f8f8f8" }
+      }
+    >
+      {/* Left: Smart Search pill + text input */}
+      <div className="flex flex-1 gap-[12px] h-full items-center min-w-0 px-[8px]">
+        {/* Smart Search pill */}
+        <button
+          onClick={() => setSmartSearch((v) => !v)}
+          className="flex gap-[6px] h-[32px] items-center px-[8px] py-[4px] rounded-full shrink-0 border transition-all"
+          style={smartSearch
+            ? { borderColor: "#dbe4fd", background: "linear-gradient(100.3deg, rgba(219,228,253,0.5) 0.23%, rgba(252,224,254,0.5) 100%)" }
+            : { borderColor: "#c4c4c4", background: "transparent" }
+          }
+        >
+          <Sparkles size={16} color={smartSearch ? "#1e1e1e" : "#c4c4c4"} strokeWidth={1.5} />
+          <span
+            style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }}
+            className={`text-[14px] leading-[18px] whitespace-nowrap transition-colors ${smartSearch ? "text-[#1e1e1e]" : "text-[#c4c4c4]"}`}
+          >
+            Smart Search
           </span>
-          <span style={{ fontFamily: "'Satoshi-Bold', sans-serif", fontWeight: 700 }} className="text-[#1e1e1e] text-[14px] leading-normal whitespace-nowrap">
-            All assets
-          </span>
-          <ChevronDown size={14} color="#1e1e1e" strokeWidth={2} />
-        </div>
-        {/* Vertical divider */}
-        <svg width="1" height="24" fill="none" viewBox="0 0 1 24" className="shrink-0">
-          <line stroke="#E4E4E4" y2="24" x1="0.5" x2="0.5" />
-        </svg>
-      </button>
+        </button>
 
-      {/* Text input */}
-      <div className="flex flex-1 items-center gap-[8px] h-full px-[12px]">
-        <Search size={16} color="#646464" strokeWidth={1.5} className="shrink-0" />
+        {/* Text input */}
         <input
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-          placeholder="Search"
-          className="flex-1 bg-transparent outline-none text-[16px] text-[#646464] placeholder:text-[#646464]"
+          placeholder={smartSearch ? "Describe what you're looking for..." : "Find assets by keywords..."}
+          className="flex-1 bg-transparent outline-none text-[16px] text-[#646464] placeholder:text-[#646464] min-w-0"
           style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }}
         />
       </div>
 
-      {/* Search button */}
-      <button onClick={handleSearch} className="bg-[#1b55f5] flex items-center justify-center self-stretch px-[24px] rounded-[4px] shrink-0 hover:bg-[#1445d4] transition-colors">
-        <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-white text-[16px] leading-[20px] whitespace-nowrap">
-          Search
-        </span>
-      </button>
+      {/* Right: Search in selector + Search button */}
+      <div className="flex h-full items-center shrink-0">
+        {/* Search in selector */}
+        <button className="flex gap-[12px] h-full items-center justify-center pl-[16px] pr-[20px] rounded-[4px] shrink-0">
+          {/* Vertical divider */}
+          <svg width="1" height="24" fill="none" viewBox="0 0 1 24" className="shrink-0">
+            <line stroke="#E4E4E4" y2="24" x1="0.5" x2="0.5" />
+          </svg>
+          <div className="flex gap-[4px] items-center">
+            <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#767676] text-[14px] leading-normal whitespace-nowrap">
+              Search in :
+            </span>
+            <span style={{ fontFamily: "'Satoshi-Bold', sans-serif", fontWeight: 700 }} className="text-[#1e1e1e] text-[14px] leading-normal whitespace-nowrap">
+              All assets
+            </span>
+            <ChevronDown size={14} color="#1e1e1e" strokeWidth={2} />
+          </div>
+        </button>
+
+        {/* Search button */}
+        <button onClick={handleSearch} className="bg-[#1b55f5] flex items-center justify-center self-stretch px-[24px] rounded-[4px] shrink-0 hover:bg-[#1445d4] transition-colors">
+          <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-white text-[16px] leading-[20px] whitespace-nowrap">
+            Search
+          </span>
+        </button>
+      </div>
     </div>
   );
 }
