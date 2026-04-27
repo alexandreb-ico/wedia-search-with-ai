@@ -289,37 +289,6 @@ function AssetCardSelected() {
   );
 }
 
-function AssetCardHovered() {
-  return (
-    <div className="flex flex-col items-start relative rounded-[4px] shrink-0 size-[243px] overflow-hidden">
-      <img alt="" className="absolute inset-0 object-cover size-full" src={imgAsset} />
-      <div className="absolute inset-0 bg-[rgba(30,30,30,0.5)] flex flex-col justify-between p-[16px] rounded-[4px]">
-        {/* Top row */}
-        <div className="flex gap-[8px] items-start w-full">
-          <div className="flex flex-1 gap-[8px] items-center min-w-0">
-            <div className="border border-white rounded-full shrink-0 size-[20px]" />
-            <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-white text-[14px] leading-[18px] truncate">
-              Asset name
-            </span>
-          </div>
-          <StatusDot />
-        </div>
-        {/* Bottom row: actions */}
-        <div className="flex gap-[8px] items-start w-full">
-          <button className="bg-white flex flex-1 gap-[6px] items-center justify-center min-h-[32px] p-[8px] rounded-[4px]">
-            <Plus size={16} color="#1e1e1e" strokeWidth={1.5} />
-            <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#1e1e1e] text-[14px] leading-[18px] whitespace-nowrap">
-              Add to
-            </span>
-          </button>
-          <button className="bg-[#646464] flex items-center justify-center p-[8px] rounded-[4px] shrink-0">
-            <Ellipsis size={16} color="white" strokeWidth={1.5} />
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 function AssetCardDigitalTemplate() {
   return (
@@ -346,9 +315,37 @@ function AssetCardDigitalTemplate() {
 
 function AssetCardDefault() {
   return (
-    <div className="flex items-start justify-end p-[16px] relative rounded-[4px] shrink-0 size-[243px] overflow-hidden">
+    <div className="group relative rounded-[4px] shrink-0 size-[243px] overflow-hidden cursor-pointer">
       <img alt="" className="absolute inset-0 object-cover size-full" src={imgAsset} />
-      <StatusDot />
+
+      {/* Default: status dot only */}
+      <div className="absolute inset-0 flex items-start justify-end p-[16px] group-hover:opacity-0 transition-opacity">
+        <StatusDot />
+      </div>
+
+      {/* Hover overlay */}
+      <div className="absolute inset-0 bg-[rgba(30,30,30,0.5)] flex flex-col justify-between p-[16px] rounded-[4px] opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="flex gap-[8px] items-start w-full">
+          <div className="flex flex-1 gap-[8px] items-center min-w-0">
+            <div className="border border-white rounded-full shrink-0 size-[20px]" />
+            <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-white text-[14px] leading-[18px] truncate">
+              Asset name
+            </span>
+          </div>
+          <StatusDot />
+        </div>
+        <div className="flex gap-[8px] items-start w-full">
+          <button className="bg-white flex flex-1 gap-[6px] items-center justify-center min-h-[32px] p-[8px] rounded-[4px]">
+            <Plus size={16} color="#1e1e1e" strokeWidth={1.5} />
+            <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#1e1e1e] text-[14px] leading-[18px] whitespace-nowrap">
+              Add to
+            </span>
+          </button>
+          <button className="bg-[#646464] flex items-center justify-center p-[8px] rounded-[4px] shrink-0">
+            <Ellipsis size={16} color="white" strokeWidth={1.5} />
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
@@ -403,8 +400,8 @@ export default function SearchResultsPage() {
         {/* Asset grid */}
         <div className="flex flex-wrap gap-[16px] items-start w-full">
           <AssetCardSelected />
-          <AssetCardHovered />
           <AssetCardDigitalTemplate />
+          <AssetCardDefault />
           {Array.from({ length: TOTAL_ASSETS }).map((_, i) => (
             <AssetCardDefault key={i} />
           ))}
