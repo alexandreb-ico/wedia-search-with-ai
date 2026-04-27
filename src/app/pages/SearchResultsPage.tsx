@@ -16,6 +16,11 @@ import {
   Check,
   Plus,
   Ellipsis,
+  Pencil,
+  Flag,
+  Copy,
+  CornerUpRight,
+  Trash2,
 } from "lucide-react";
 import svgPaths from "../../imports/DesktopWorkspacesInsideAWorkspaceAssetSelected/svg-qymjkh6ysf";
 import imgAsset from "../../imports/HomePage/asset-placeholder.jpg";
@@ -168,7 +173,13 @@ function FilterPill({ label }: { label: string }) {
   );
 }
 
-function FilterBar() {
+interface FilterBarProps {
+  selectedCount: number;
+  onSelectAll: () => void;
+  onUnselectAll: () => void;
+}
+
+function FilterBar({ selectedCount, onSelectAll, onUnselectAll }: FilterBarProps) {
   return (
     <div className="flex flex-col gap-[24px] items-start w-full shrink-0">
       {/* Top row */}
@@ -204,16 +215,36 @@ function FilterBar() {
 
       {/* Bottom row */}
       <div className="flex items-center justify-between w-full">
-        {/* Left: count + select all */}
+        {/* Left: count + select actions */}
         <div className="flex gap-[8px] items-center shrink-0">
-          <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#1e1e1e] text-[14px] leading-[18px] whitespace-nowrap">
-            1000 assets
-          </span>
-          <button className="flex items-center justify-center min-h-[32px] p-[8px] rounded-[4px]">
-            <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#949494] text-[14px] leading-[18px] whitespace-nowrap">
-              Select all
-            </span>
-          </button>
+          {selectedCount > 0 ? (
+            <>
+              <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#1e1e1e] text-[14px] leading-[18px] whitespace-nowrap">
+                {selectedCount} asset{selectedCount !== 1 ? "s" : ""} selected
+              </span>
+              <button onClick={onUnselectAll} className="flex items-center justify-center min-h-[32px] p-[8px] rounded-[4px]">
+                <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#1b55f5] text-[14px] leading-[18px] whitespace-nowrap underline">
+                  Unselect all
+                </span>
+              </button>
+              <button onClick={onSelectAll} className="flex items-center justify-center min-h-[32px] p-[8px] rounded-[4px]">
+                <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#1b55f5] text-[14px] leading-[18px] whitespace-nowrap underline">
+                  Select all
+                </span>
+              </button>
+            </>
+          ) : (
+            <>
+              <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#1e1e1e] text-[14px] leading-[18px] whitespace-nowrap">
+                1000 assets
+              </span>
+              <button onClick={onSelectAll} className="flex items-center justify-center min-h-[32px] p-[8px] rounded-[4px]">
+                <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#949494] text-[14px] leading-[18px] whitespace-nowrap">
+                  Select all
+                </span>
+              </button>
+            </>
+          )}
         </div>
 
         {/* Right: controls */}
@@ -296,18 +327,27 @@ function AssetCardDigitalTemplate() {
   );
 }
 
-function AssetCard() {
-  const [selected, setSelected] = React.useState(false);
+interface AssetCardProps {
+  selected: boolean;
+  onToggle: () => void;
+}
 
+function AssetCard({ selected, onToggle }: AssetCardProps) {
   if (selected) {
     return (
-      <div className="border-[3px] border-[#3377ff] relative rounded-[4px] shrink-0 size-[243px] overflow-hidden cursor-pointer" onClick={() => setSelected(false)}>
+      <div className="border-[3px] border-[#3377ff] relative rounded-[4px] shrink-0 size-[243px] overflow-hidden cursor-pointer" onClick={onToggle}>
         <img alt="" className="absolute inset-0 object-cover size-full" src={imgAsset} />
         <div className="absolute inset-0 flex items-start justify-between p-[16px]">
           <div className="bg-[#1b55f5] flex items-center justify-center rounded-full shrink-0 size-[20px]">
             <Check size={12} color="white" strokeWidth={2.5} />
           </div>
-          <StatusDot />
+          <div className="flex gap-[8px] items-center">
+            <Pencil size={16} color="white" strokeWidth={1.5} />
+            <Flag size={16} color="white" strokeWidth={1.5} />
+            <Copy size={16} color="white" strokeWidth={1.5} />
+            <CornerUpRight size={16} color="white" strokeWidth={1.5} />
+            <Trash2 size={16} color="white" strokeWidth={1.5} />
+          </div>
         </div>
       </div>
     );
@@ -327,7 +367,7 @@ function AssetCard() {
         <div className="flex gap-[8px] items-start w-full">
           <div className="flex flex-1 gap-[8px] items-center min-w-0">
             <button
-              onClick={() => setSelected(true)}
+              onClick={(e) => { e.stopPropagation(); onToggle(); }}
               className="border border-white rounded-full shrink-0 size-[20px] hover:bg-white/20 transition-colors"
             />
             <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-white text-[14px] leading-[18px] truncate">
@@ -374,17 +414,35 @@ function Footer() {
   );
 }
 
-const TOTAL_ASSETS = 17;
+const TOTAL_CARDS = 18;
 
 export default function SearchResultsPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [query, setQuery] = React.useState(searchParams.get("q") ?? "");
+  const [selectedIds, setSelectedIds] = React.useState<Set<number>>(new Set());
 
   function handleSearch() {
     if (query.trim()) {
       navigate(`/search?q=${encodeURIComponent(query.trim())}`);
     }
+  }
+
+  function toggleCard(id: number) {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+
+  function selectAll() {
+    setSelectedIds(new Set(Array.from({ length: TOTAL_CARDS }, (_, i) => i)));
+  }
+
+  function unselectAll() {
+    setSelectedIds(new Set());
   }
 
   return (
@@ -397,14 +455,18 @@ export default function SearchResultsPage() {
       />
 
       <div className="flex flex-col gap-[32px] items-start px-[80px] py-[40px] w-full">
-        <FilterBar />
+        <FilterBar
+          selectedCount={selectedIds.size}
+          onSelectAll={selectAll}
+          onUnselectAll={unselectAll}
+        />
 
         {/* Asset grid */}
         <div className="flex flex-wrap gap-[16px] items-start w-full">
-          <AssetCard />
+          <AssetCard selected={selectedIds.has(0)} onToggle={() => toggleCard(0)} />
           <AssetCardDigitalTemplate />
-          {Array.from({ length: TOTAL_ASSETS }).map((_, i) => (
-            <AssetCard key={i} />
+          {Array.from({ length: TOTAL_CARDS - 1 }).map((_, i) => (
+            <AssetCard key={i + 1} selected={selectedIds.has(i + 1)} onToggle={() => toggleCard(i + 1)} />
           ))}
         </div>
       </div>
