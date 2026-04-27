@@ -84,10 +84,10 @@ function SearchBar() {
 
   return (
     <div
-      className="flex items-center p-[4px] h-[56px] rounded-[4px] shrink-0 w-[800px] relative z-10 transition-colors"
+      className="flex items-center p-[4px] h-[56px] rounded-[4px] shrink-0 w-[800px] relative z-10 transition-colors border-2"
       style={smartSearch
-        ? { background: "white", border: "2px solid #dbe4fd" }
-        : { background: "#f8f8f8" }
+        ? { background: "white", borderColor: "#dbe4fd" }
+        : { background: "#f8f8f8", borderColor: "white" }
       }
     >
       {/* Left: Smart Search pill + text input */}
