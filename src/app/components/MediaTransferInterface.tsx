@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { Link } from "react-router";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -79,7 +80,7 @@ function Wediatransfer() {
 function Navigation() {
   return (
     <div className="bg-white flex h-[72px] items-center justify-between px-[40px] py-[12px] shrink-0 sticky top-0 w-full z-10">
-      <Logo />
+      <Link to="/"><Logo /></Link>
       <div className="flex gap-[24px] items-center justify-end shrink-0">
         <Wediatransfer />
         <div className="flex h-[24px] items-center justify-center shrink-0 w-0">
