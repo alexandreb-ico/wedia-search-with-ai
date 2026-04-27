@@ -2116,7 +2116,7 @@ export default function MediaTransferInterface() {
     setShowPublishToast(true);
   };
   const currentAssets = isInsideSubFolder ? activeSubFolder!.assets : isInsideFolder ? activeFolder!.assets : workspaceAssets;
-  const currentTitle = isInsideSubFolder ? activeSubFolder!.name : isInsideFolder ? activeFolder!.name : "Workspace title";
+  const currentTitle = isInsideSubFolder ? activeSubFolder!.name : isInsideFolder ? activeFolder!.name : "Hello workspace";
   const hasSelection = selectedAssets.size > 0;
 
   // Breadcrumb items for ActionBar (ancestors, not the current page)
