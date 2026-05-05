@@ -604,8 +604,10 @@ function FloatingScenarioToolbar({ scenario, onChange }: FloatingToolbarProps) {
   const dragStart = React.useRef({ mx: 0, my: 0, px: 0, py: 0 });
 
   // Init position after mount so we have window height
+  const toolbarRef = React.useRef<HTMLDivElement>(null);
   React.useEffect(() => {
-    setPos({ x: 24, y: window.innerHeight - 200 });
+    const h = toolbarRef.current?.offsetHeight ?? 240;
+    setPos({ x: 24, y: window.innerHeight - h - 24 });
     setReady(true);
   }, []);
 
@@ -617,9 +619,11 @@ function FloatingScenarioToolbar({ scenario, onChange }: FloatingToolbarProps) {
   React.useEffect(() => {
     function onMove(e: MouseEvent) {
       if (!dragging.current) return;
+      const w = toolbarRef.current?.offsetWidth ?? 200;
+      const h = toolbarRef.current?.offsetHeight ?? 240;
       setPos({
-        x: Math.max(0, dragStart.current.px + (e.clientX - dragStart.current.mx)),
-        y: Math.max(0, dragStart.current.py + (e.clientY - dragStart.current.my)),
+        x: Math.min(Math.max(0, dragStart.current.px + (e.clientX - dragStart.current.mx)), window.innerWidth - w - 8),
+        y: Math.min(Math.max(0, dragStart.current.py + (e.clientY - dragStart.current.my)), window.innerHeight - h - 8),
       });
     }
     function onUp() { dragging.current = false; }
@@ -632,6 +636,7 @@ function FloatingScenarioToolbar({ scenario, onChange }: FloatingToolbarProps) {
 
   return (
     <div
+      ref={toolbarRef}
       className="fixed z-50 bg-white rounded-[10px] shadow-[0_4px_20px_rgba(0,0,0,0.15)] border border-[#e4e4e4] select-none w-[200px]"
       style={{ left: pos.x, top: pos.y }}
     >
