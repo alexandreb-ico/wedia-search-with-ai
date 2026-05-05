@@ -358,7 +358,7 @@ function PortalsBanner() {
             </div>
             {/* Info */}
             <div className="flex flex-col gap-[16px] flex-1 py-[8px] min-w-0">
-              <p style={{ fontFamily: "'Satoshi-Bold', sans-serif", fontWeight: 700 }} className="text-[#1e1e1e] text-[18px] leading-normal overflow-hidden text-ellipsis">{p.title}</p>
+              <p style={{ fontFamily: "'Satoshi-Bold', sans-serif", fontWeight: 700 }} className="text-[#1e1e1e] text-[16px] leading-normal overflow-hidden text-ellipsis">{p.title}</p>
               <p style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#949494] text-[14px] leading-normal whitespace-nowrap">{p.count} assets</p>
             </div>
           </div>
