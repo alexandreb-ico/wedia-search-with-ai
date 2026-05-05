@@ -446,24 +446,26 @@ function KeywordRefinementBar({ query, onTrySmartSearch }: KeywordRefinementBarP
         {/* Right: gradient AI promotion card */}
         <button
           onClick={onTrySmartSearch}
-          className="flex flex-col items-start px-[12px] py-[8px] rounded-[4px] shrink-0 hover:opacity-90 transition-opacity"
-          style={{ background: "linear-gradient(109.55deg, rgb(219,228,253) 0.23%, rgb(252,224,254) 100%)" }}
+          className="flex flex-col items-start p-[8px] rounded-[4px] shrink-0 hover:opacity-90 transition-opacity"
+          style={{ backgroundImage: "linear-gradient(108.53deg, rgb(219,228,253) 0.23%, rgb(252,224,254) 100%)" }}
         >
-          <div className="flex items-center gap-[12px]">
+          <div className="flex gap-[12px] items-center shrink-0 w-full">
             {/* Icon box */}
             <div
-              className="flex items-center justify-center p-[12px] rounded-[4px] shrink-0"
-              style={{ background: "linear-gradient(92.75deg, rgba(27,85,245,0.16) 0.23%, rgba(247,62,246,0.16) 100%)" }}
+              className="flex items-center justify-center rounded-[4px] shrink-0 size-[28px]"
+              style={{ backgroundImage: "linear-gradient(92.75deg, rgba(27,85,245,0.16) 0.23%, rgba(247,62,246,0.16) 100%)" }}
             >
               <img src={imgSmartSearchIcon} alt="" className="size-[16px]" />
             </div>
 
             {/* Text + arrow */}
-            <div className="flex items-center gap-[8px] py-[4px]">
-              <span style={{ fontFamily: "'Satoshi-Bold', sans-serif", fontWeight: 700 }} className="text-[#1e1e1e] text-[16px] leading-[20px] whitespace-nowrap">
-                248 AI search results for "{query || "your search"}"
-              </span>
-              <ArrowRight size={16} color="#1e1e1e" strokeWidth={1.5} />
+            <div className="flex flex-col items-start py-[4px] shrink-0">
+              <div className="flex gap-[8px] items-center">
+                <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#1e1e1e] text-[12px] leading-[15px] whitespace-nowrap">
+                  248 AI search results for "{query || "your search"}"
+                </span>
+                <ArrowRight size={16} color="#1e1e1e" strokeWidth={1.5} />
+              </div>
             </div>
           </div>
         </button>
