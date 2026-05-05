@@ -4,7 +4,7 @@ import {
   Bell, Menu, ChevronDown, Search, X,
   SlidersHorizontal, Star, AlignJustify, Columns3, Grid2x2, LayoutGrid,
   RectangleHorizontal, Check, Plus, Ellipsis, Pencil, Flag, Copy,
-  CornerUpRight, Trash2, ChevronRight, RefreshCw, GripVertical,
+  CornerUpRight, Trash2, ChevronRight, ArrowRight, RefreshCw, GripVertical,
 } from "lucide-react";
 import svgPaths from "../../imports/DesktopWorkspacesInsideAWorkspaceAssetSelected/svg-qymjkh6ysf";
 import imgAsset from "../../imports/HomePage/asset-placeholder.jpg";
@@ -407,51 +407,67 @@ function SmartSearchBanner({ onSeeAll }: SmartSearchBannerProps) {
 
 // ─── Keyword refinement bar (scenario C, sticky bottom) ───────────────────────
 
-const AI_KEYWORDS = [
-  "Basketball court", "Outdoor sport", "Team sport",
-  "Ball game", "Sports field", "Athletic competition",
-  "Street basketball", "Training session",
-];
+const AI_KEYWORDS = ["174", "JPO", "beautiful", "nature", "summer"];
 
 interface KeywordRefinementBarProps {
+  query: string;
   onTrySmartSearch: () => void;
 }
 
-function KeywordRefinementBar({ onTrySmartSearch }: KeywordRefinementBarProps) {
+function KeywordRefinementBar({ query, onTrySmartSearch }: KeywordRefinementBarProps) {
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-10 bg-white border-t border-[#e4e4e4] shadow-[0_-4px_16px_rgba(0,0,0,0.08)]">
-      <div className="px-[80px] py-[14px] flex items-center gap-[16px]">
-        {/* Label */}
-        <div className="flex items-center gap-[8px] shrink-0">
-          <img src={imgSmartSearchIcon} alt="" className="size-[16px] shrink-0" />
-          <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500, color: PURPLE }} className="text-[14px] whitespace-nowrap">
-            Refine with AI:
-          </span>
+    <div className="fixed bottom-0 left-0 right-0 z-10 bg-white shadow-[0_-5px_15px_rgba(30,30,30,0.08)]">
+      <div className="px-[80px] py-[20px] flex items-center justify-between gap-[24px]">
+
+        {/* Left: label + keyword pills */}
+        <div className="flex items-center gap-[8px] min-w-0">
+          {/* Label */}
+          <div className="flex items-center gap-[4px] shrink-0">
+            <Search size={16} color="#1e1e1e" strokeWidth={1.5} />
+            <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#1e1e1e] text-[16px] leading-[20px] whitespace-nowrap">
+              Keywords related to your search
+            </span>
+          </div>
+
+          {/* Blue keyword pills */}
+          <div className="flex gap-[4px] items-center">
+            {AI_KEYWORDS.map((kw) => (
+              <button
+                key={kw}
+                className="border border-[#1b55f5] flex items-center justify-center min-h-[32px] px-[8px] rounded-[4px] shrink-0 hover:bg-[#f0f4ff] transition-colors"
+                style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }}
+              >
+                <span className="text-[#1b55f5] text-[14px] leading-[18px] whitespace-nowrap">{kw}</span>
+              </button>
+            ))}
+          </div>
         </div>
 
-        {/* Keyword pills */}
-        <div className="flex flex-1 gap-[8px] items-center overflow-hidden">
-          {AI_KEYWORDS.map((kw) => (
-            <button
-              key={kw}
-              className="border rounded-full px-[12px] py-[5px] text-[13px] text-[#1e1e1e] bg-white whitespace-nowrap shrink-0 transition-colors hover:bg-[#f4f0fe]"
-              style={{ borderColor: "#dbe4fd", fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }}
-            >
-              {kw}
-            </button>
-          ))}
-        </div>
-
-        {/* CTA */}
+        {/* Right: gradient AI promotion card */}
         <button
           onClick={onTrySmartSearch}
-          className="flex items-center gap-[6px] px-[16px] py-[8px] rounded-[4px] shrink-0 whitespace-nowrap transition-colors hover:opacity-80"
-          style={{ border: `1px solid ${PURPLE}`, color: PURPLE, fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }}
+          className="flex flex-col items-start px-[12px] py-[8px] rounded-[4px] shrink-0 hover:opacity-90 transition-opacity"
+          style={{ background: "linear-gradient(109.55deg, rgb(219,228,253) 0.23%, rgb(252,224,254) 100%)" }}
         >
-          <img src={imgSmartSearchIcon} alt="" className="size-[14px]" />
-          <span className="text-[14px]">Try Smart Search</span>
-          <ChevronRight size={14} strokeWidth={1.5} />
+          <div className="flex items-center gap-[12px]">
+            {/* Icon box */}
+            <div
+              className="flex items-center justify-center p-[12px] rounded-[4px] shrink-0"
+              style={{ background: "linear-gradient(92.75deg, rgba(27,85,245,0.16) 0.23%, rgba(247,62,246,0.16) 100%)" }}
+            >
+              <img src={imgSmartSearchIcon} alt="" className="size-[16px]" />
+            </div>
+
+            {/* Text + arrow */}
+            <div className="flex items-center gap-[8px] py-[4px]">
+              <span style={{ fontFamily: "'Satoshi-Bold', sans-serif", fontWeight: 700 }} className="text-[#1e1e1e] text-[16px] leading-[20px] whitespace-nowrap">
+                248 AI search results for "{query || "your search"}"
+              </span>
+              <ArrowRight size={16} color="#1e1e1e" strokeWidth={1.5} />
+            </div>
+          </div>
         </button>
+
       </div>
     </div>
   );
@@ -712,6 +728,11 @@ export default function SearchResultsPage() {
   function selectAll() { setSelectedIds(new Set(ALL_CLASSIC_IDS)); }
   function unselectAll() { setSelectedIds(new Set()); }
 
+  function switchToSmartTab() {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    setActiveTab("smart");
+  }
+
   const showKeywordBar = scenario === "many" && activeTab === "classic";
 
   return (
@@ -756,7 +777,7 @@ export default function SearchResultsPage() {
                 <img src={imgSmartSearchIcon} alt="" className="size-[40px] opacity-40" />
                 <p style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#949494] text-[16px]">No classic results found.</p>
                 <button
-                  onClick={() => setActiveTab("smart")}
+                  onClick={switchToSmartTab}
                   className="flex items-center gap-[6px] px-[20px] py-[10px] rounded-[4px] text-white text-[14px]"
                   style={{ background: PURPLE, fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }}
                 >
@@ -769,7 +790,7 @@ export default function SearchResultsPage() {
 
             {/* Scenario B: Smart Search banner */}
             {scenario === "few" && (
-              <SmartSearchBanner onSeeAll={() => setActiveTab("smart")} />
+              <SmartSearchBanner onSeeAll={switchToSmartTab} />
             )}
           </>
         ) : (
@@ -794,7 +815,7 @@ export default function SearchResultsPage() {
 
       {/* Scenario C: sticky keyword refinement bar */}
       {showKeywordBar && (
-        <KeywordRefinementBar onTrySmartSearch={() => setActiveTab("smart")} />
+        <KeywordRefinementBar query={query} onTrySmartSearch={switchToSmartTab} />
       )}
 
       {/* Dev scenario switcher */}
