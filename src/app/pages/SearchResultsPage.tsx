@@ -315,36 +315,51 @@ function FilterBar({ activeTab, onTabChange, classicCount, smartCount, selectedC
 const PORTALS = [
   { title: "MICHELIN Pilot Sport All-Season 4", count: 80 },
   { title: "Tiny houses", count: 46 },
-  { title: "MICHELIN Agilis CrossClimate", count: 10 },
+  { title: "MICHELIN Agilis CrossClimate (Euro...", count: 10 },
 ];
 
 function PortalsBanner() {
   return (
-    <div className="border border-[#e4e4e4] rounded-[8px] p-[20px] w-full shrink-0">
-      <div className="flex items-center justify-between mb-[16px]">
-        <div className="flex items-center gap-[8px]">
-          <span style={{ fontFamily: "'Satoshi-Bold', sans-serif", fontWeight: 700 }} className="text-[#1e1e1e] text-[16px]">Portals</span>
-          <span className="bg-[#e4e4e4] text-[#1e1e1e] text-[12px] px-[6px] py-[2px] rounded-full" style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }}>8+</span>
-          <button className="flex items-center gap-[4px] text-[#1b55f5] text-[14px]" style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }}>
-            See all <ChevronRight size={14} strokeWidth={1.5} />
+    <div className="border border-[#e4e4e4] flex flex-col gap-[20px] items-start pl-[24px] pr-px py-[20px] rounded-[8px] w-full shrink-0">
+      {/* Header */}
+      <div className="flex items-center justify-between pr-[24px] w-full">
+        <div className="flex gap-[12px] items-center shrink-0">
+          {/* Title + counter */}
+          <div className="flex gap-[8px] items-center shrink-0">
+            <span style={{ fontFamily: "'Satoshi-Bold', sans-serif", fontWeight: 700 }} className="text-[#1e1e1e] text-[16px] leading-[20px] whitespace-nowrap">Portals</span>
+            <span className="bg-[#e4e4e4] px-[6px] py-[4px] rounded-full" style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }}>
+              <span className="text-[#1e1e1e] text-[12px] leading-[15px]">8+</span>
+            </span>
+          </div>
+          {/* See all */}
+          <button className="flex gap-[6px] items-center justify-center min-h-[32px] p-[8px] rounded-[4px] hover:bg-[#f8f8f8] transition-colors shrink-0">
+            <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#1e1e1e] text-[14px] leading-[18px] whitespace-nowrap">See all</span>
+            <ChevronRight size={16} color="#1e1e1e" strokeWidth={1.5} />
           </button>
         </div>
-        <div className="flex gap-[8px]">
-          <button className="border border-[#e4e4e4] rounded-[4px] p-[6px] hover:border-[#1b55f5] transition-colors">
+        {/* Nav arrows */}
+        <div className="flex gap-[10px] items-start shrink-0">
+          <button className="border border-[#e4e4e4] flex items-center justify-center p-[8px] rounded-[4px] hover:border-[#1b55f5] transition-colors">
             <ChevronRight size={16} color="#1e1e1e" strokeWidth={1.5} className="rotate-180" />
           </button>
-          <button className="border border-[#e4e4e4] rounded-[4px] p-[6px] hover:border-[#1b55f5] transition-colors">
+          <button className="border border-[#e4e4e4] flex items-center justify-center p-[8px] rounded-[4px] hover:border-[#1b55f5] transition-colors">
             <ChevronRight size={16} color="#1e1e1e" strokeWidth={1.5} />
           </button>
         </div>
       </div>
-      <div className="flex gap-[16px] overflow-hidden">
+
+      {/* Portal cards */}
+      <div className="flex gap-[16px] items-start overflow-hidden w-full">
         {PORTALS.map((p) => (
-          <div key={p.title} className="border border-[#e4e4e4] rounded-[8px] overflow-hidden shrink-0 w-[300px]">
-            <img alt="" className="w-full h-[100px] object-cover" src={imgAsset} />
-            <div className="p-[12px]">
-              <p style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#1e1e1e] text-[14px] truncate">{p.title}</p>
-              <p style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#646464] text-[12px] mt-[4px]">{p.count} assets</p>
+          <div key={p.title} className="bg-white flex gap-[24px] items-center pl-[8px] pr-[24px] py-[8px] rounded-[4px] shrink-0 w-[416px]">
+            {/* Thumbnail */}
+            <div className="flex flex-col h-[104px] items-start justify-center shrink-0 w-[160px]">
+              <img alt="" className="h-full w-full object-cover rounded-[2px]" src={imgAsset} />
+            </div>
+            {/* Info */}
+            <div className="flex flex-col gap-[16px] flex-1 py-[8px] min-w-0">
+              <p style={{ fontFamily: "'Satoshi-Bold', sans-serif", fontWeight: 700 }} className="text-[#1e1e1e] text-[18px] leading-normal overflow-hidden text-ellipsis">{p.title}</p>
+              <p style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#949494] text-[14px] leading-normal whitespace-nowrap">{p.count} assets</p>
             </div>
           </div>
         ))}
