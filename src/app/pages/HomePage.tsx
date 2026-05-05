@@ -1,7 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router";
-import { Bell, ChevronDown, Menu } from "lucide-react";
-import imgSmartSearchIcon from "../../imports/HomePage/smart-search-icon.svg";
+import { Bell, ChevronDown, Menu, Search } from "lucide-react";
 import svgPaths from "../../imports/DesktopWorkspacesInsideAWorkspaceAssetSelected/svg-qymjkh6ysf";
 import imgHeader from "../../imports/HomePage/header-bg.jpg";
 import imgLogoWhite from "../../imports/HomePage/logo-wedia-white.svg";
@@ -72,143 +71,54 @@ function Navigation() {
   );
 }
 
-const PLACEHOLDER_OFF = "Find assets by keywords...";
-const PLACEHOLDER_ON = "Describe what you're looking for...";
-
 function SearchBar() {
   const [query, setQuery] = useState("");
-  const [smartSearch, setSmartSearch] = useState(false);
-  const [typedPlaceholder, setTypedPlaceholder] = useState(PLACEHOLDER_OFF);
-  const [isTyping, setIsTyping] = useState(false);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const target = smartSearch ? PLACEHOLDER_ON : PLACEHOLDER_OFF;
-    setTypedPlaceholder("");
-    setIsTyping(true);
-    let i = 0;
-    const timer = setInterval(() => {
-      i++;
-      setTypedPlaceholder(target.slice(0, i));
-      if (i >= target.length) {
-        clearInterval(timer);
-        setIsTyping(false);
-      }
-    }, 32);
-    return () => clearInterval(timer);
-  }, [smartSearch]);
 
   function handleSearch() {
     if (query.trim()) {
-      const params = new URLSearchParams({ q: query.trim() });
-      if (smartSearch) params.set("smart", "1");
-      navigate(`/search?${params.toString()}`);
+      navigate(`/search?q=${encodeURIComponent(query.trim())}`);
     }
   }
 
   return (
-    <div
-      className="flex items-center p-[4px] h-[56px] rounded-[4px] shrink-0 w-[800px] relative z-10 border-2"
-      style={{
-        background: smartSearch ? "white" : "#f8f8f8",
-        borderColor: smartSearch ? "#dbe4fd" : "white",
-        transition: "background 300ms ease, border-color 300ms ease",
-      }}
-    >
-      {/* Left: Smart Search pill + text input */}
-      <div className="flex flex-1 gap-[12px] h-full items-center min-w-0 px-[8px]">
-        {/* Smart Search pill */}
-        <button
-          onClick={() => setSmartSearch((v) => !v)}
-          className="relative flex gap-[6px] h-[32px] items-center px-[8px] py-[4px] rounded-full shrink-0 overflow-hidden"
-          style={{
-            borderWidth: 1,
-            borderStyle: "solid",
-            borderColor: smartSearch ? "#dbe4fd" : "#c4c4c4",
-            transition: "border-color 300ms ease",
-          }}
-        >
-          {/* Gradient background — always present, fades in/out */}
-          <div
-            className="absolute inset-0 rounded-full pointer-events-none"
-            style={{
-              background: "linear-gradient(100.3deg, rgba(219,228,253,0.5) 0.23%, rgba(252,224,254,0.5) 100%)",
-              opacity: smartSearch ? 1 : 0,
-              transition: "opacity 300ms ease",
-            }}
-          />
-          <img
-            src={imgSmartSearchIcon}
-            alt=""
-            className="relative shrink-0 size-[16px]"
-            style={{
-              filter: smartSearch ? "none" : "grayscale(1) opacity(0.4)",
-              transition: "filter 300ms ease",
-            }}
-          />
-          <span
-            style={{
-              fontFamily: "'Satoshi-Medium', sans-serif",
-              fontWeight: 500,
-              color: smartSearch ? "#1e1e1e" : "#c4c4c4",
-              transition: "color 300ms ease",
-            }}
-            className="relative text-[14px] leading-[18px] whitespace-nowrap"
-          >
-            Smart Search
-          </span>
-        </button>
+    <div className="bg-[#f8f8f8] flex items-center p-[4px] h-[56px] rounded-[4px] shrink-0 w-[800px] relative z-10">
+      {/* Text input */}
+      <div className="flex flex-1 items-center gap-[8px] h-full px-[12px] min-w-0">
+        <Search size={16} color="#646464" strokeWidth={1.5} className="shrink-0" />
+        <input
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+          placeholder="Find assets by keywords..."
+          className="flex-1 bg-transparent outline-none text-[16px] text-[#646464] placeholder:text-[#646464] min-w-0"
+          style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }}
+        />
+      </div>
 
-        {/* Text input with typewriter placeholder */}
-        <div className="relative flex-1 min-w-0 flex items-center h-full">
-          <input
-            type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-            className="w-full bg-transparent outline-none text-[16px] text-[#646464] min-w-0"
-            style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }}
-          />
-          {!query && (
-            <span
-              className="absolute inset-0 flex items-center pointer-events-none select-none overflow-hidden whitespace-nowrap text-[16px] text-[#646464]"
-              style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }}
-            >
-              {typedPlaceholder}
-              {isTyping && (
-                <span className="ml-px opacity-70 animate-pulse">|</span>
-              )}
-            </span>
-          )}
+      {/* Search in selector */}
+      <button className="flex gap-[12px] h-full items-center justify-center pl-[16px] pr-[20px] rounded-[4px] shrink-0">
+        <svg width="1" height="24" fill="none" viewBox="0 0 1 24" className="shrink-0">
+          <line stroke="#E4E4E4" y2="24" x1="0.5" x2="0.5" />
+        </svg>
+        <div className="flex gap-[4px] items-center">
+          <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#767676] text-[14px] leading-normal whitespace-nowrap">
+            Search in :
+          </span>
+          <span style={{ fontFamily: "'Satoshi-Bold', sans-serif", fontWeight: 700 }} className="text-[#1e1e1e] text-[14px] leading-normal whitespace-nowrap">
+            All assets
+          </span>
+          <ChevronDown size={14} color="#1e1e1e" strokeWidth={2} />
         </div>
-      </div>
+      </button>
 
-      {/* Right: Search in selector + Search button */}
-      <div className="flex h-full items-center shrink-0">
-        {/* Search in selector */}
-        <button className="flex gap-[12px] h-full items-center justify-center pl-[16px] pr-[20px] rounded-[4px] shrink-0">
-          {/* Vertical divider */}
-          <svg width="1" height="24" fill="none" viewBox="0 0 1 24" className="shrink-0">
-            <line stroke="#E4E4E4" y2="24" x1="0.5" x2="0.5" />
-          </svg>
-          <div className="flex gap-[4px] items-center">
-            <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#767676] text-[14px] leading-normal whitespace-nowrap">
-              Search in :
-            </span>
-            <span style={{ fontFamily: "'Satoshi-Bold', sans-serif", fontWeight: 700 }} className="text-[#1e1e1e] text-[14px] leading-normal whitespace-nowrap">
-              All assets
-            </span>
-            <ChevronDown size={14} color="#1e1e1e" strokeWidth={2} />
-          </div>
-        </button>
-
-        {/* Search button */}
-        <button onClick={handleSearch} className="bg-[#1b55f5] flex items-center justify-center self-stretch px-[24px] rounded-[4px] shrink-0 hover:bg-[#1445d4] transition-colors">
-          <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-white text-[16px] leading-[20px] whitespace-nowrap">
-            Search
-          </span>
-        </button>
-      </div>
+      {/* Search button */}
+      <button onClick={handleSearch} className="bg-[#1b55f5] flex items-center justify-center self-stretch px-[24px] rounded-[4px] shrink-0 hover:bg-[#1445d4] transition-colors">
+        <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-white text-[16px] leading-[20px] whitespace-nowrap">
+          Search
+        </span>
+      </button>
     </div>
   );
 }
@@ -225,7 +135,6 @@ export default function HomePage() {
           className="absolute inset-0 object-cover pointer-events-none size-full z-0"
           src={imgHeader}
         />
-        {/* spacer */}
         <div className="relative z-10" />
         <SearchBar />
         <div className="flex gap-[8px] items-center relative z-10">
@@ -238,7 +147,6 @@ export default function HomePage() {
 
       {/* Content area */}
       <div className="flex flex-1 flex-col items-center justify-end w-full min-h-px">
-        {/* Footer */}
         <div className="flex gap-[8px] h-[99px] items-center justify-center py-[40px] w-full">
           <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#646464] text-[14px] whitespace-nowrap">Legal notice</span>
           <Dot />
