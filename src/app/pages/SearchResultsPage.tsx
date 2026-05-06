@@ -26,6 +26,16 @@ const PURPLE_LIGHT = "#b48af6";
 
 // ─── Shared primitives ────────────────────────────────────────────────────────
 
+function SmartSearchIcon({ color = "#1E1E1E", size = 14 }: { color?: string; size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 13.1299 13.5905" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
+      <path d="M5.2002 0.458705C5.73888 0.458705 6.25848 0.540153 6.74707 0.692104L6.4707 1.32687L4.87305 2.05343C4.85795 2.06028 4.84369 2.06928 4.8291 2.07687C3.01593 2.26278 1.60073 3.79588 1.60059 5.65792C1.60059 7.64539 3.21275 9.25845 5.2002 9.25851C6.97933 9.25851 8.4566 7.96583 8.74707 6.26925C8.79134 6.21142 8.83136 6.14948 8.86133 6.08078L9.5752 4.44308L10.1826 4.16769C10.3236 4.63983 10.4004 5.13987 10.4004 5.65792C10.4004 6.80529 10.0278 7.86536 9.40039 8.72531L12.5654 11.8933L13.1299 12.4587L12 13.5905L8.26758 9.85812C7.4076 10.4881 6.34765 10.8581 5.2002 10.8581C2.32775 10.8581 0 8.53039 0 5.65792C0.000158187 2.7856 2.32784 0.458764 5.2002 0.458705ZM7.59375 1.04074C8.0577 1.28165 8.48066 1.59032 8.84961 1.95382L8.87598 2.01437L8.93457 2.04074C9.29838 2.41622 9.60475 2.84668 9.84277 3.31808L8.87598 3.75656L8.58398 4.42648C8.23147 3.45896 7.47505 2.68623 6.51953 2.30929L7.16992 2.01437L7.59375 1.04074Z" fill={color} />
+      <path d="M7.17 2.01387L8.02333 0.0546875L8.87667 2.01387L10.7967 2.88462L8.87667 3.75537L8.02333 5.71455L7.17 3.75537L5.25 2.88462L7.17 2.01387Z" fill={color} />
+      <path d="M11.6724 0L11.2457 0.979592L10.2857 1.41497L11.2457 1.85034L11.6724 2.82993L12.099 1.85034L13.059 1.41497L12.099 0.979592L11.6724 0Z" fill={color} />
+    </svg>
+  );
+}
+
 function Logo() {
   return (
     <div className="h-[21.785px] relative shrink-0 w-[36.889px]">
@@ -270,16 +280,11 @@ function FilterBar({ activeTab, onTabChange, classicCount, smartCount, portalsCo
         <button
           onClick={() => onTabChange("smart")}
           className="flex items-center gap-[6px] px-[4px] pb-[10px] mr-[24px] relative"
-          style={{ borderBottom: activeTab === "smart" ? `2px solid ${PURPLE_LIGHT}` : "2px solid transparent", marginBottom: -1 }}
+          style={{ borderBottom: activeTab === "smart" ? `2px solid ${PURPLE}` : "2px solid transparent", marginBottom: -1 }}
         >
-          <img
-            src={imgSmartSearchIcon}
-            alt=""
-            className="size-[14px] shrink-0"
-            style={{ filter: activeTab === "smart" ? "none" : "grayscale(1) opacity(0.5)" }}
-          />
+          <SmartSearchIcon color={activeTab === "smart" ? PURPLE : "#949494"} size={14} />
           <span
-            style={{ fontFamily: "'Satoshi-Bold', sans-serif", fontWeight: 700, color: activeTab === "smart" ? PURPLE_LIGHT : "#949494" }}
+            style={{ fontFamily: "'Satoshi-Bold', sans-serif", fontWeight: 700, color: activeTab === "smart" ? PURPLE : "#949494" }}
             className="text-[16px] leading-[20px] whitespace-nowrap transition-colors"
           >
             Smart Search
@@ -288,7 +293,7 @@ function FilterBar({ activeTab, onTabChange, classicCount, smartCount, portalsCo
             className="text-[12px] leading-[15px] px-[6px] py-[4px] rounded-full"
             style={{
               fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500,
-              background: activeTab === "smart" ? "#d1b8fa" : `${PURPLE_LIGHT}22`,
+              background: activeTab === "smart" ? PURPLE : `${PURPLE_LIGHT}22`,
               color: activeTab === "smart" ? "white" : PURPLE_LIGHT,
             }}
           >
@@ -788,7 +793,7 @@ export default function SearchResultsPage() {
       />
 
       {/* ── Sticky filter bar (sticks below navigation) ── */}
-      <div className="sticky top-[72px] z-10 bg-[#f8f8f8] px-[80px] pt-[16px] w-full">
+      <div className="sticky top-[72px] z-10 bg-[#f8f8f8] px-[80px] pt-[16px] pb-[16px] w-full">
         <FilterBar
           activeTab={activeTab}
           onTabChange={setActiveTab}
@@ -803,7 +808,7 @@ export default function SearchResultsPage() {
       </div>
 
       {/* ── Scrollable content ── */}
-      <div className="flex flex-col gap-[24px] items-start px-[80px] pb-[40px] pt-[16px] w-full">
+      <div className="flex flex-col gap-[24px] items-start px-[80px] pb-[40px] pt-[0px] w-full">
 
         {/* Bottom controls row (non-sticky) */}
         <div className="flex items-center justify-between w-full">
