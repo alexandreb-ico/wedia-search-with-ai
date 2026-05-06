@@ -397,39 +397,39 @@ function SmartSearchBanner({ onSeeAll }: SmartSearchBannerProps) {
   return (
     <div
       className="w-full rounded-[8px] overflow-hidden shrink-0"
-      style={{ background: "linear-gradient(115.15deg, rgba(219,228,253,0.6) 0.23%, rgba(252,224,254,0.6) 100%), white" }}
+      style={{ background: "linear-gradient(103.57deg, rgba(219,228,253,0.6) 0.23%, rgba(252,224,254,0.6) 100%), white" }}
     >
-      <div className="flex items-start gap-[16px] p-[20px]">
-        {/* Left: text + button */}
-        <div className="flex flex-col gap-[20px] flex-1 min-w-0">
+      <div className="flex items-center gap-[16px] px-[20px] py-[16px]">
+        {/* Left: 3 asset thumbnails */}
+        <div className="flex flex-wrap gap-x-[16px] gap-y-[8px] items-center justify-end self-stretch shrink-0">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="relative rounded-[4px] shrink-0 overflow-hidden" style={{ width: 91, height: 91 }}>
+              <img alt="" className="absolute inset-0 object-cover size-full" src={imgAsset} />
+            </div>
+          ))}
+        </div>
+
+        {/* Right: text + button */}
+        <div className="flex flex-col gap-[20px] shrink-0">
           <div className="flex flex-col gap-[12px]">
             <div className="flex items-center gap-[12px]">
-              <img src={imgSmartSearchIcon} alt="" className="size-[16px] shrink-0" />
+              <SmartSearchIcon color="#1e1e1e" size={16} />
               <span style={{ fontFamily: "'Satoshi-Bold', sans-serif", fontWeight: 700 }} className="text-[#1e1e1e] text-[16px] leading-[20px] whitespace-nowrap">Smart search results</span>
               <span className="text-[12px] px-[6px] py-[4px] rounded-full text-[#1e1e1e] leading-[15px]" style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500, background: "#e4e4e4" }}>40+</span>
               <ChevronRight size={16} color="#1e1e1e" strokeWidth={1.5} />
             </div>
-            <p style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#646464] text-[14px] leading-[18px] whitespace-nowrap overflow-hidden text-ellipsis">
+            <p style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#646464] text-[14px] leading-[18px] whitespace-nowrap">
               Visual and semantic similarity based search
             </p>
           </div>
           <button
             onClick={onSeeAll}
-            className="flex items-center gap-[6px] px-[8px] py-[8px] rounded-[4px] shrink-0 self-start hover:opacity-80 transition-opacity"
+            className="flex items-center gap-[6px] px-[8px] py-[8px] rounded-[4px] self-start hover:opacity-80 transition-opacity"
             style={{ border: "1px solid #e4e4e4", color: "#1e1e1e", fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }}
           >
             <span className="text-[14px] leading-[18px] whitespace-nowrap">See all results</span>
             <ArrowRight size={16} strokeWidth={1.5} />
           </button>
-        </div>
-
-        {/* Right: 4 asset thumbnails */}
-        <div className="flex flex-wrap gap-[16px] items-center justify-end self-stretch">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="relative rounded-[4px] shrink-0 overflow-hidden" style={{ width: 91, height: 91 }}>
-              <img alt="" className="absolute inset-0 object-cover size-full" src={imgAsset} />
-            </div>
-          ))}
         </div>
       </div>
     </div>
