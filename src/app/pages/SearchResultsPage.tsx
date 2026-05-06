@@ -152,12 +152,41 @@ function Navigation({ query, resultCount, onQueryChange, onSearch }: NavigationP
 
 const FILTERS = ["Asset type:", "Collection", "Folder", "Keywords", "Languages", "People", "Rights"];
 
-function FilterPill({ label }: { label: string }) {
+const FILTER_VALUES: Record<string, string> = {
+  "Asset type:": "Image",
+  "Collection": "Summer 2024",
+  "Folder": "Marketing",
+  "Keywords": "Nature",
+  "Languages": "English",
+  "People": "Team A",
+  "Rights": "Royalty-free",
+};
+
+function FilterPill({ label, onClick }: { label: string; onClick: () => void }) {
   return (
-    <button className="border border-[#e4e4e4] flex gap-[8px] items-center justify-center p-[8px] rounded-[4px] shrink-0 hover:border-[#1b55f5] transition-colors">
+    <button
+      onClick={onClick}
+      className="border border-[#e4e4e4] flex gap-[8px] items-center justify-center p-[8px] rounded-[4px] shrink-0 hover:border-[#1b55f5] transition-colors"
+    >
       <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#646464] text-[14px] leading-[18px] whitespace-nowrap">{label}</span>
       <ChevronDown size={16} color="#646464" strokeWidth={1.5} />
     </button>
+  );
+}
+
+function ActiveFilterChip({ label, value, onRemove }: { label: string; value: string; onRemove: () => void }) {
+  return (
+    <div className="bg-[#1b55f5] flex gap-[8px] items-center justify-center p-[8px] rounded-[4px] shrink-0">
+      <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-white text-[14px] leading-[18px] whitespace-nowrap">
+        {label} {value}
+      </span>
+      <button
+        onClick={onRemove}
+        className="shrink-0 flex items-center justify-center size-[16px] rounded-full bg-white/25 hover:bg-white/40 transition-colors"
+      >
+        <X size={10} color="white" strokeWidth={2.5} />
+      </button>
+    </div>
   );
 }
 
@@ -167,18 +196,17 @@ interface FilterBarProps {
   classicCount: number;
   smartCount: number;
   portalsCount: number;
-  selectedCount: number;
-  onSelectAll: () => void;
-  onUnselectAll: () => void;
+  activeFilters: { label: string; value: string }[];
+  onFilterClick: (label: string) => void;
+  onRemoveFilter: (label: string) => void;
+  onClearFilters: () => void;
 }
 
-function FilterBar({ activeTab, onTabChange, classicCount, smartCount, portalsCount, selectedCount, onSelectAll, onUnselectAll }: FilterBarProps) {
-  const displayCount = activeTab === "classic" ? classicCount : smartCount;
-
+function FilterBar({ activeTab, onTabChange, classicCount, smartCount, portalsCount, activeFilters, onFilterClick, onRemoveFilter, onClearFilters }: FilterBarProps) {
   return (
     <div className="flex flex-col items-start w-full shrink-0">
-      {/* Top row: filters */}
-      <div className="flex gap-[16px] items-center w-full pb-[24px]">
+      {/* Filter pills row */}
+      <div className="flex gap-[16px] items-center w-full pb-[16px]">
         <button className="border border-[#e4e4e4] flex gap-[6px] items-center justify-center min-h-[32px] p-[8px] rounded-[4px] shrink-0 hover:border-[#1b55f5] transition-colors">
           <SlidersHorizontal size={16} color="#1e1e1e" strokeWidth={1.5} />
           <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#1e1e1e] text-[14px] leading-[18px] whitespace-nowrap">Advanced search</span>
@@ -187,13 +215,30 @@ function FilterBar({ activeTab, onTabChange, classicCount, smartCount, portalsCo
           <div className="h-[20px] w-px bg-[#e4e4e4]" />
         </div>
         <div className="flex flex-1 gap-[8px] items-center overflow-hidden">
-          {FILTERS.map((f) => <FilterPill key={f} label={f} />)}
+          {FILTERS.map((f) => <FilterPill key={f} label={f} onClick={() => onFilterClick(f)} />)}
         </div>
         <button className="border border-[#e4e4e4] flex gap-[6px] items-center justify-center min-h-[32px] p-[8px] rounded-[4px] shrink-0 hover:border-[#1b55f5] transition-colors">
           <Star size={16} color="#1e1e1e" strokeWidth={1.5} />
           <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#1e1e1e] text-[14px] leading-[18px] whitespace-nowrap">Bookmark search</span>
         </button>
       </div>
+
+      {/* Active filters row — visible only when filters are active */}
+      {activeFilters.length > 0 && (
+        <div className="flex gap-[16px] items-center w-full pb-[16px]">
+          <button
+            onClick={onClearFilters}
+            className="border border-[#1b55f5] flex gap-[6px] items-center justify-center min-h-[32px] p-[8px] rounded-[4px] shrink-0 hover:bg-[#1b55f5]/5 transition-colors"
+          >
+            <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#1b55f5] text-[14px] leading-[18px] whitespace-nowrap">Clear filters</span>
+          </button>
+          <div className="flex flex-1 gap-[8px] items-center flex-wrap">
+            {activeFilters.map((f) => (
+              <ActiveFilterChip key={f.label} label={f.label} value={f.value} onRemove={() => onRemoveFilter(f.label)} />
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Tab row */}
       <div className="flex items-end w-full border-b border-[#e4e4e4]">
@@ -204,13 +249,13 @@ function FilterBar({ activeTab, onTabChange, classicCount, smartCount, portalsCo
           style={{ borderBottom: activeTab === "classic" ? "2px solid #1b55f5" : "2px solid transparent", marginBottom: -1 }}
         >
           <span
-            style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500, color: activeTab === "classic" ? "#1e1e1e" : "#949494" }}
-            className="text-[14px] leading-[18px] whitespace-nowrap transition-colors"
+            style={{ fontFamily: "'Satoshi-Bold', sans-serif", fontWeight: 700, color: activeTab === "classic" ? "#1e1e1e" : "#949494" }}
+            className="text-[16px] leading-[20px] whitespace-nowrap transition-colors"
           >
             Classic search
           </span>
           <span
-            className="text-[12px] leading-[16px] px-[6px] py-[2px] rounded-full"
+            className="text-[12px] leading-[15px] px-[6px] py-[4px] rounded-full"
             style={{
               fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500,
               background: activeTab === "classic" ? "#e4e4e4" : "#f0f0f0",
@@ -225,7 +270,7 @@ function FilterBar({ activeTab, onTabChange, classicCount, smartCount, portalsCo
         <button
           onClick={() => onTabChange("smart")}
           className="flex items-center gap-[6px] px-[4px] pb-[10px] mr-[24px] relative"
-          style={{ borderBottom: activeTab === "smart" ? `2px solid ${PURPLE}` : "2px solid transparent", marginBottom: -1 }}
+          style={{ borderBottom: activeTab === "smart" ? `2px solid ${PURPLE_LIGHT}` : "2px solid transparent", marginBottom: -1 }}
         >
           <img
             src={imgSmartSearchIcon}
@@ -234,16 +279,16 @@ function FilterBar({ activeTab, onTabChange, classicCount, smartCount, portalsCo
             style={{ filter: activeTab === "smart" ? "none" : "grayscale(1) opacity(0.5)" }}
           />
           <span
-            style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500, color: activeTab === "smart" ? PURPLE : PURPLE_LIGHT }}
-            className="text-[14px] leading-[18px] whitespace-nowrap transition-colors"
+            style={{ fontFamily: "'Satoshi-Bold', sans-serif", fontWeight: 700, color: activeTab === "smart" ? PURPLE_LIGHT : "#949494" }}
+            className="text-[16px] leading-[20px] whitespace-nowrap transition-colors"
           >
             Smart Search
           </span>
           <span
-            className="text-[12px] leading-[16px] px-[6px] py-[2px] rounded-full"
+            className="text-[12px] leading-[15px] px-[6px] py-[4px] rounded-full"
             style={{
               fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500,
-              background: activeTab === "smart" ? PURPLE : `${PURPLE_LIGHT}22`,
+              background: activeTab === "smart" ? "#d1b8fa" : `${PURPLE_LIGHT}22`,
               color: activeTab === "smart" ? "white" : PURPLE_LIGHT,
             }}
           >
@@ -258,13 +303,13 @@ function FilterBar({ activeTab, onTabChange, classicCount, smartCount, portalsCo
           style={{ borderBottom: activeTab === "portals" ? "2px solid #1b55f5" : "2px solid transparent", marginBottom: -1 }}
         >
           <span
-            style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500, color: activeTab === "portals" ? "#1e1e1e" : "#949494" }}
-            className="text-[14px] leading-[18px] whitespace-nowrap transition-colors"
+            style={{ fontFamily: "'Satoshi-Bold', sans-serif", fontWeight: 700, color: activeTab === "portals" ? "#1e1e1e" : "#949494" }}
+            className="text-[16px] leading-[20px] whitespace-nowrap transition-colors"
           >
             Portals
           </span>
           <span
-            className="text-[12px] leading-[16px] px-[6px] py-[2px] rounded-full"
+            className="text-[12px] leading-[15px] px-[6px] py-[4px] rounded-full"
             style={{
               fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500,
               background: activeTab === "portals" ? "#e4e4e4" : "#f0f0f0",
@@ -274,61 +319,6 @@ function FilterBar({ activeTab, onTabChange, classicCount, smartCount, portalsCo
             {portalsCount}
           </span>
         </button>
-      </div>
-
-      {/* Bottom row: action controls */}
-      <div className="flex items-center justify-between w-full pt-[16px]">
-        <div className="flex gap-[8px] items-center shrink-0">
-          {selectedCount > 0 ? (
-            <>
-              <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#1e1e1e] text-[14px] leading-[18px] whitespace-nowrap">
-                {selectedCount} asset{selectedCount !== 1 ? "s" : ""} selected
-              </span>
-              <button onClick={onUnselectAll} className="flex items-center justify-center min-h-[32px] p-[8px] rounded-[4px]">
-                <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#1b55f5] text-[14px] leading-[18px] whitespace-nowrap underline">Unselect all</span>
-              </button>
-              <button onClick={onSelectAll} className="flex items-center justify-center min-h-[32px] p-[8px] rounded-[4px]">
-                <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#1b55f5] text-[14px] leading-[18px] whitespace-nowrap underline">Select all</span>
-              </button>
-            </>
-          ) : (
-            <>
-              <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#1e1e1e] text-[14px] leading-[18px] whitespace-nowrap">
-                {displayCount} assets
-              </span>
-              <button onClick={onSelectAll} className="flex items-center justify-center min-h-[32px] p-[8px] rounded-[4px]">
-                <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#949494] text-[14px] leading-[18px] whitespace-nowrap">Select all</span>
-              </button>
-            </>
-          )}
-        </div>
-
-        <div className="flex gap-[8px] items-center shrink-0">
-          <div className="flex gap-[8px] items-center min-h-[32px] p-[8px] rounded-[4px]">
-            <div className="bg-[#c4c4c4] flex items-center p-[2px] rounded-full w-[22px] shrink-0">
-              <div className="bg-white rounded-full size-[10px]" />
-            </div>
-            <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#1e1e1e] text-[14px] leading-[18px] whitespace-nowrap">By relevance</span>
-          </div>
-          <button className="border border-[#e4e4e4] flex gap-[8px] items-center justify-center p-[8px] rounded-[4px] shrink-0 hover:border-[#1b55f5] transition-colors">
-            <div className="flex gap-[4px] items-center">
-              <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#646464] text-[14px] leading-[18px] whitespace-nowrap">Sort by:</span>
-              <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#1e1e1e] text-[14px] leading-[18px] whitespace-nowrap">Most recent</span>
-            </div>
-            <ChevronDown size={16} color="#646464" strokeWidth={1.5} />
-          </button>
-          <button className="border border-[#1b55f5] flex gap-[6px] items-center justify-center min-h-[32px] p-[8px] rounded-[4px] shrink-0">
-            <RectangleHorizontal size={16} color="#1b55f5" strokeWidth={1.5} />
-            <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#1b55f5] text-[14px] leading-[18px] whitespace-nowrap">Collapse assets</span>
-          </button>
-          <div className="border border-[#e4e4e4] flex items-start rounded-[4px] shrink-0">
-            {[AlignJustify, Columns3, Grid2x2, LayoutGrid].map((Icon, i) => (
-              <button key={i} className={`flex items-center justify-center p-[8px] rounded-[4px] ${i === 3 ? "bg-[#1b55f5]" : "hover:bg-[#f8f8f8]"}`}>
-                <Icon size={16} color={i === 3 ? "white" : "#1e1e1e"} strokeWidth={1.5} />
-              </button>
-            ))}
-          </div>
-        </div>
       </div>
     </div>
   );
@@ -724,10 +714,12 @@ export default function SearchResultsPage() {
   const [activeTab, setActiveTab] = React.useState<Tab>("smart");
   const [selectedIds, setSelectedIds] = React.useState<Set<number>>(new Set());
   const [bannerVisible, setBannerVisible] = React.useState(true);
+  const [activeFilters, setActiveFilters] = React.useState<{ label: string; value: string }[]>([]);
   const bannerRef = React.useRef<HTMLDivElement>(null);
 
   const classicCount = SCENARIO_CONFIG[scenario].classicCount;
   const hasResults = classicCount > 0;
+  const displayCount = activeTab === "classic" ? classicCount : SMART_COUNT;
 
   // When scenario changes, reset tab
   React.useEffect(() => {
@@ -766,11 +758,28 @@ export default function SearchResultsPage() {
     setActiveTab("smart");
   }
 
+  function handleFilterClick(label: string) {
+    setActiveFilters((prev) => {
+      const exists = prev.find((f) => f.label === label);
+      if (exists) return prev.filter((f) => f.label !== label);
+      return [...prev, { label, value: FILTER_VALUES[label] ?? "Value" }];
+    });
+  }
+
+  function handleRemoveFilter(label: string) {
+    setActiveFilters((prev) => prev.filter((f) => f.label !== label));
+  }
+
+  function handleClearFilters() {
+    setActiveFilters([]);
+  }
+
   // Show sticky card when on classic tab with results and banner is out of view
   const showStickyCard = activeTab === "classic" && hasResults && !bannerVisible;
 
   return (
     <div className="bg-[#f8f8f8] flex flex-col min-h-screen">
+      {/* ── Sticky navigation ── */}
       <Navigation
         query={query}
         resultCount={classicCount + SMART_COUNT}
@@ -778,22 +787,82 @@ export default function SearchResultsPage() {
         onSearch={handleSearch}
       />
 
-      <div className="flex flex-col gap-[32px] items-start px-[80px] py-[40px] w-full">
+      {/* ── Sticky filter bar (sticks below navigation) ── */}
+      <div className="sticky top-[72px] z-10 bg-[#f8f8f8] px-[80px] pt-[16px] w-full">
         <FilterBar
           activeTab={activeTab}
           onTabChange={setActiveTab}
           classicCount={classicCount}
           smartCount={SMART_COUNT}
           portalsCount={PORTALS_COUNT}
-          selectedCount={selectedIds.size}
-          onSelectAll={selectAll}
-          onUnselectAll={unselectAll}
+          activeFilters={activeFilters}
+          onFilterClick={handleFilterClick}
+          onRemoveFilter={handleRemoveFilter}
+          onClearFilters={handleClearFilters}
         />
+      </div>
+
+      {/* ── Scrollable content ── */}
+      <div className="flex flex-col gap-[24px] items-start px-[80px] pb-[40px] pt-[16px] w-full">
+
+        {/* Bottom controls row (non-sticky) */}
+        <div className="flex items-center justify-between w-full">
+          <div className="flex gap-[8px] items-center shrink-0">
+            {selectedIds.size > 0 ? (
+              <>
+                <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#1e1e1e] text-[14px] leading-[18px] whitespace-nowrap">
+                  {selectedIds.size} asset{selectedIds.size !== 1 ? "s" : ""} selected
+                </span>
+                <button onClick={unselectAll} className="flex items-center justify-center min-h-[32px] p-[8px] rounded-[4px]">
+                  <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#1b55f5] text-[14px] leading-[18px] whitespace-nowrap underline">Unselect all</span>
+                </button>
+                <button onClick={selectAll} className="flex items-center justify-center min-h-[32px] p-[8px] rounded-[4px]">
+                  <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#1b55f5] text-[14px] leading-[18px] whitespace-nowrap underline">Select all</span>
+                </button>
+              </>
+            ) : (
+              <>
+                <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#1e1e1e] text-[14px] leading-[18px] whitespace-nowrap">
+                  {displayCount} assets
+                </span>
+                <button onClick={selectAll} className="flex items-center justify-center min-h-[32px] p-[8px] rounded-[4px]">
+                  <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#949494] text-[14px] leading-[18px] whitespace-nowrap">Select all</span>
+                </button>
+              </>
+            )}
+          </div>
+          <div className="flex gap-[8px] items-center shrink-0">
+            <div className="flex gap-[8px] items-center min-h-[32px] p-[8px] rounded-[4px]">
+              <div className="bg-[#c4c4c4] flex items-center p-[2px] rounded-full w-[22px] shrink-0">
+                <div className="bg-white rounded-full size-[10px]" />
+              </div>
+              <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#1e1e1e] text-[14px] leading-[18px] whitespace-nowrap">By relevance</span>
+            </div>
+            <button className="border border-[#e4e4e4] flex gap-[8px] items-center justify-center p-[8px] rounded-[4px] shrink-0 hover:border-[#1b55f5] transition-colors">
+              <div className="flex gap-[4px] items-center">
+                <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#646464] text-[14px] leading-[18px] whitespace-nowrap">Sort by:</span>
+                <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#1e1e1e] text-[14px] leading-[18px] whitespace-nowrap">Most recent</span>
+              </div>
+              <ChevronDown size={16} color="#646464" strokeWidth={1.5} />
+            </button>
+            <button className="border border-[#1b55f5] flex gap-[6px] items-center justify-center min-h-[32px] p-[8px] rounded-[4px] shrink-0">
+              <RectangleHorizontal size={16} color="#1b55f5" strokeWidth={1.5} />
+              <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#1b55f5] text-[14px] leading-[18px] whitespace-nowrap">Collapse assets</span>
+            </button>
+            <div className="border border-[#e4e4e4] flex items-start rounded-[4px] shrink-0">
+              {[AlignJustify, Columns3, Grid2x2, LayoutGrid].map((Icon, i) => (
+                <button key={i} className={`flex items-center justify-center p-[8px] rounded-[4px] ${i === 3 ? "bg-[#1b55f5]" : "hover:bg-[#f8f8f8]"}`}>
+                  <Icon size={16} color={i === 3 ? "white" : "#1e1e1e"} strokeWidth={1.5} />
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
 
         {/* ── Classic tab ── */}
         {activeTab === "classic" && (
           <>
-            {/* Smart Search banner — always at top in both scenarios */}
+            {/* Smart Search banner */}
             <div ref={bannerRef} className="w-full shrink-0">
               <SmartSearchBanner onSeeAll={switchToSmartTab} />
             </div>
