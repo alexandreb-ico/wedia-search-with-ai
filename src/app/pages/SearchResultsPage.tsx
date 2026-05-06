@@ -13,13 +13,12 @@ import imgSmartSearchIcon from "../../imports/HomePage/smart-search-icon.svg";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type Scenario = "zero" | "few" | "many";
-type Tab = "classic" | "smart";
+type Scenario = "zero" | "results";
+type Tab = "classic" | "smart" | "portals";
 
 const SCENARIO_CONFIG: Record<Scenario, { classicCount: number; label: string; sublabel: string }> = {
-  zero:  { classicCount: 0,    label: "0 results",    sublabel: "→ Smart Search tab" },
-  few:   { classicCount: 12,   label: "< 20 results", sublabel: "→ Banner" },
-  many:  { classicCount: 1000, label: "≥ 20 results", sublabel: "→ Keyword bar" },
+  zero:    { classicCount: 0,  label: "0 results",  sublabel: "→ Smart Search tab" },
+  results: { classicCount: 12, label: "Has results", sublabel: "→ Classic tab" },
 };
 const SMART_COUNT = 200;
 const PURPLE = "#813de0";
@@ -224,7 +223,7 @@ function FilterBar({ activeTab, onTabChange, classicCount, smartCount, selectedC
         {/* Smart Search tab */}
         <button
           onClick={() => onTabChange("smart")}
-          className="flex items-center gap-[6px] px-[4px] pb-[10px] relative"
+          className="flex items-center gap-[6px] px-[4px] pb-[10px] mr-[24px] relative"
           style={{ borderBottom: activeTab === "smart" ? `2px solid ${PURPLE}` : "2px solid transparent", marginBottom: -1 }}
         >
           <img
@@ -248,6 +247,30 @@ function FilterBar({ activeTab, onTabChange, classicCount, smartCount, selectedC
             }}
           >
             {smartCount}
+          </span>
+        </button>
+
+        {/* Portals tab */}
+        <button
+          onClick={() => onTabChange("portals")}
+          className="flex items-center gap-[8px] px-[4px] pb-[10px] relative"
+          style={{ borderBottom: activeTab === "portals" ? "2px solid #1b55f5" : "2px solid transparent", marginBottom: -1 }}
+        >
+          <span
+            style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500, color: activeTab === "portals" ? "#1e1e1e" : "#949494" }}
+            className="text-[14px] leading-[18px] whitespace-nowrap transition-colors"
+          >
+            Portals
+          </span>
+          <span
+            className="text-[12px] leading-[16px] px-[6px] py-[2px] rounded-full"
+            style={{
+              fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500,
+              background: activeTab === "portals" ? "#e4e4e4" : "#f0f0f0",
+              color: activeTab === "portals" ? "#1e1e1e" : "#949494",
+            }}
+          >
+            8+
           </span>
         </button>
       </div>
@@ -420,60 +443,29 @@ function SmartSearchBanner({ onSeeAll }: SmartSearchBannerProps) {
   );
 }
 
-// ─── Keyword refinement bar (scenario C, sticky bottom) ───────────────────────
+// ─── Sticky smart search card (shown when banner scrolls out of view) ────────
 
-const AI_KEYWORDS = ["174", "JPO", "beautiful", "nature", "summer"];
-
-interface KeywordRefinementBarProps {
+interface StickySmartCardProps {
   query: string;
   onTrySmartSearch: () => void;
 }
 
-function KeywordRefinementBar({ query, onTrySmartSearch }: KeywordRefinementBarProps) {
+function StickySmartCard({ query, onTrySmartSearch }: StickySmartCardProps) {
   return (
     <div className="fixed bottom-0 left-0 right-0 z-10 bg-white shadow-[0_-5px_15px_rgba(30,30,30,0.08)]">
-      <div className="px-[80px] py-[20px] flex items-center justify-between gap-[24px]">
-
-        {/* Left: label + keyword pills */}
-        <div className="flex items-center gap-[8px] min-w-0">
-          {/* Label */}
-          <div className="flex items-center gap-[4px] shrink-0">
-            <Search size={16} color="#1e1e1e" strokeWidth={1.5} />
-            <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#1e1e1e] text-[16px] leading-[20px] whitespace-nowrap">
-              Keywords related to your search
-            </span>
-          </div>
-
-          {/* Blue keyword pills */}
-          <div className="flex gap-[4px] items-center">
-            {AI_KEYWORDS.map((kw) => (
-              <button
-                key={kw}
-                className="border border-[#1b55f5] flex items-center justify-center min-h-[32px] px-[8px] rounded-[4px] shrink-0 hover:bg-[#f0f4ff] transition-colors"
-                style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }}
-              >
-                <span className="text-[#1b55f5] text-[14px] leading-[18px] whitespace-nowrap">{kw}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Right: gradient AI promotion card */}
+      <div className="px-[80px] py-[16px] flex items-center justify-end">
         <button
           onClick={onTrySmartSearch}
           className="flex flex-col items-start p-[8px] rounded-[4px] shrink-0 hover:opacity-90 transition-opacity"
           style={{ backgroundImage: "linear-gradient(108.53deg, rgb(219,228,253) 0.23%, rgb(252,224,254) 100%)" }}
         >
           <div className="flex gap-[12px] items-center shrink-0 w-full">
-            {/* Icon box */}
             <div
               className="flex items-center justify-center rounded-[4px] shrink-0 size-[28px]"
               style={{ backgroundImage: "linear-gradient(92.75deg, rgba(27,85,245,0.16) 0.23%, rgba(247,62,246,0.16) 100%)" }}
             >
               <img src={imgSmartSearchIcon} alt="" className="size-[16px]" />
             </div>
-
-            {/* Text + arrow */}
             <div className="flex flex-col items-start py-[4px] shrink-0">
               <div className="flex gap-[8px] items-center">
                 <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#1e1e1e] text-[12px] leading-[15px] whitespace-nowrap">
@@ -484,7 +476,6 @@ function KeywordRefinementBar({ query, onTrySmartSearch }: KeywordRefinementBarP
             </div>
           </div>
         </button>
-
       </div>
     </div>
   );
@@ -617,11 +608,10 @@ function FloatingScenarioToolbar({ scenario, onChange }: FloatingToolbarProps) {
   const [ready, setReady] = React.useState(false);
   const dragging = React.useRef(false);
   const dragStart = React.useRef({ mx: 0, my: 0, px: 0, py: 0 });
-
-  // Init position after mount so we have window height
   const toolbarRef = React.useRef<HTMLDivElement>(null);
+
   React.useEffect(() => {
-    const h = toolbarRef.current?.offsetHeight ?? 240;
+    const h = toolbarRef.current?.offsetHeight ?? 180;
     setPos({ x: 24, y: window.innerHeight - h - 24 });
     setReady(true);
   }, []);
@@ -726,14 +716,28 @@ export default function SearchResultsPage() {
   const [scenario, setScenario] = React.useState<Scenario>("zero");
   const [activeTab, setActiveTab] = React.useState<Tab>("smart");
   const [selectedIds, setSelectedIds] = React.useState<Set<number>>(new Set());
+  const [bannerVisible, setBannerVisible] = React.useState(true);
+  const bannerRef = React.useRef<HTMLDivElement>(null);
 
   const classicCount = SCENARIO_CONFIG[scenario].classicCount;
+  const hasResults = classicCount > 0;
 
-  // When scenario changes, set the default tab
+  // When scenario changes, reset tab
   React.useEffect(() => {
     setSelectedIds(new Set());
     setActiveTab(scenario === "zero" ? "smart" : "classic");
   }, [scenario]);
+
+  // Track smart search banner visibility for sticky card
+  React.useEffect(() => {
+    if (!bannerRef.current) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setBannerVisible(entry.isIntersecting),
+      { threshold: 0 }
+    );
+    observer.observe(bannerRef.current);
+    return () => observer.disconnect();
+  }, [activeTab, scenario]);
 
   function handleSearch() {
     if (query.trim()) navigate(`/search?q=${encodeURIComponent(query.trim())}`);
@@ -755,10 +759,11 @@ export default function SearchResultsPage() {
     setActiveTab("smart");
   }
 
-  const showKeywordBar = scenario === "many" && activeTab === "classic";
+  // Show sticky card when on classic tab with results and banner is out of view
+  const showStickyCard = activeTab === "classic" && hasResults && !bannerVisible;
 
   return (
-    <div className={`bg-[#f8f8f8] flex flex-col min-h-screen ${showKeywordBar ? "pb-[60px]" : ""}`}>
+    <div className={`bg-[#f8f8f8] flex flex-col min-h-screen ${showStickyCard ? "pb-[72px]" : ""}`}>
       <Navigation
         query={query}
         resultCount={classicCount + SMART_COUNT}
@@ -777,24 +782,27 @@ export default function SearchResultsPage() {
           onUnselectAll={unselectAll}
         />
 
-        {/* ── Body content by tab + scenario ── */}
-
-        {activeTab === "classic" ? (
+        {/* ── Classic tab ── */}
+        {activeTab === "classic" && (
           <>
-            {/* Portals only when classic has results */}
-            {classicCount > 0 && <PortalsBanner />}
+            {hasResults ? (
+              <>
+                {/* Smart Search banner always at top when there are results */}
+                <div ref={bannerRef} className="w-full shrink-0">
+                  <SmartSearchBanner onSeeAll={switchToSmartTab} />
+                </div>
 
-            {/* Classic asset grid */}
-            {classicCount > 0 ? (
-              <div className="flex flex-wrap gap-[16px] items-start w-full">
-                <AssetCard selected={selectedIds.has(0)} onToggle={() => toggleCard(0)} />
-                <AssetCardDigitalTemplate selected={selectedIds.has(1)} onToggle={() => toggleCard(1)} />
-                {Array.from({ length: Math.min(classicCount - 2, EXTRA_CARDS) }).map((_, i) => (
-                  <AssetCard key={i + 2} selected={selectedIds.has(i + 2)} onToggle={() => toggleCard(i + 2)} />
-                ))}
-              </div>
+                {/* Asset grid */}
+                <div className="flex flex-wrap gap-[16px] items-start w-full">
+                  <AssetCard selected={selectedIds.has(0)} onToggle={() => toggleCard(0)} />
+                  <AssetCardDigitalTemplate selected={selectedIds.has(1)} onToggle={() => toggleCard(1)} />
+                  {Array.from({ length: Math.min(classicCount - 2, EXTRA_CARDS) }).map((_, i) => (
+                    <AssetCard key={i + 2} selected={selectedIds.has(i + 2)} onToggle={() => toggleCard(i + 2)} />
+                  ))}
+                </div>
+              </>
             ) : (
-              /* Scenario A: no classic results — nudge user to Smart Search */
+              /* Zero results — nudge to Smart Search */
               <div className="flex flex-col items-center justify-center w-full py-[80px] gap-[16px]">
                 <img src={imgSmartSearchIcon} alt="" className="size-[40px] opacity-40" />
                 <p style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#949494] text-[16px]">No classic results found.</p>
@@ -809,14 +817,11 @@ export default function SearchResultsPage() {
                 </button>
               </div>
             )}
-
-            {/* Scenario B: Smart Search banner */}
-            {scenario === "few" && (
-              <SmartSearchBanner onSeeAll={switchToSmartTab} />
-            )}
           </>
-        ) : (
-          /* Smart Search tab */
+        )}
+
+        {/* ── Smart Search tab ── */}
+        {activeTab === "smart" && (
           <div className="flex flex-col gap-[16px] w-full">
             <div className="flex flex-wrap gap-[16px] items-start w-full">
               {Array.from({ length: 19 }).map((_, i) => (
@@ -831,13 +836,20 @@ export default function SearchResultsPage() {
             </div>
           </div>
         )}
+
+        {/* ── Portals tab ── */}
+        {activeTab === "portals" && (
+          <div className="flex flex-col gap-[24px] w-full">
+            <PortalsBanner />
+          </div>
+        )}
       </div>
 
       <Footer />
 
-      {/* Scenario C: sticky keyword refinement bar */}
-      {showKeywordBar && (
-        <KeywordRefinementBar query={query} onTrySmartSearch={switchToSmartTab} />
+      {/* Sticky gradient card — visible once smart search banner is out of view */}
+      {showStickyCard && (
+        <StickySmartCard query={query} onTrySmartSearch={switchToSmartTab} />
       )}
 
       {/* Dev scenario switcher */}
