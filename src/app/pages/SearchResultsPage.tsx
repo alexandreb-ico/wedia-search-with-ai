@@ -166,12 +166,13 @@ interface FilterBarProps {
   onTabChange: (t: Tab) => void;
   classicCount: number;
   smartCount: number;
+  portalsCount: number;
   selectedCount: number;
   onSelectAll: () => void;
   onUnselectAll: () => void;
 }
 
-function FilterBar({ activeTab, onTabChange, classicCount, smartCount, selectedCount, onSelectAll, onUnselectAll }: FilterBarProps) {
+function FilterBar({ activeTab, onTabChange, classicCount, smartCount, portalsCount, selectedCount, onSelectAll, onUnselectAll }: FilterBarProps) {
   const displayCount = activeTab === "classic" ? classicCount : smartCount;
 
   return (
@@ -270,7 +271,7 @@ function FilterBar({ activeTab, onTabChange, classicCount, smartCount, selectedC
               color: activeTab === "portals" ? "#1e1e1e" : "#949494",
             }}
           >
-            8+
+            {portalsCount}
           </span>
         </button>
       </div>
@@ -716,6 +717,7 @@ function Footer() {
 
 const EXTRA_CARDS = 17;
 const ALL_CLASSIC_IDS = [0, 1, ...Array.from({ length: EXTRA_CARDS }, (_, i) => i + 2)];
+const PORTALS_COUNT = 9;
 
 export default function SearchResultsPage() {
   const [searchParams] = useSearchParams();
@@ -785,6 +787,7 @@ export default function SearchResultsPage() {
           onTabChange={setActiveTab}
           classicCount={classicCount}
           smartCount={SMART_COUNT}
+          portalsCount={PORTALS_COUNT}
           selectedCount={selectedIds.size}
           onSelectAll={selectAll}
           onUnselectAll={unselectAll}
@@ -831,7 +834,7 @@ export default function SearchResultsPage() {
         {/* ── Portals tab ── */}
         {activeTab === "portals" && (
           <div className="flex flex-wrap gap-[16px] items-start w-full">
-            {Array.from({ length: 9 }).map((_, i) => (
+            {Array.from({ length: PORTALS_COUNT }).map((_, i) => (
               <div key={i} className="bg-white flex gap-[24px] items-center pl-[8px] pr-[24px] py-[8px] rounded-[4px] shrink-0 w-[416px]">
                 <div className="flex flex-col h-[104px] items-start justify-center shrink-0 w-[160px]">
                   <img alt="" className="h-full w-full object-cover rounded-[2px]" src={imgAsset} />
