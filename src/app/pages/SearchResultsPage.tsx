@@ -452,28 +452,40 @@ interface StickySmartCardProps {
 
 function StickySmartCard({ query, onTrySmartSearch }: StickySmartCardProps) {
   return (
-    <button
-      onClick={onTrySmartSearch}
-      className="fixed bottom-[24px] right-[80px] z-10 flex flex-col items-start p-[8px] rounded-[4px] shrink-0 hover:opacity-90 transition-opacity shadow-[0_4px_16px_rgba(30,30,30,0.12)]"
-      style={{ backgroundImage: "linear-gradient(108.53deg, rgb(219,228,253) 0.23%, rgb(252,224,254) 100%)" }}
-    >
-      <div className="flex gap-[12px] items-center shrink-0 w-full">
-        <div
-          className="flex items-center justify-center rounded-[4px] shrink-0 size-[28px]"
-          style={{ backgroundImage: "linear-gradient(92.75deg, rgba(27,85,245,0.16) 0.23%, rgba(247,62,246,0.16) 100%)" }}
-        >
-          <img src={imgSmartSearchIcon} alt="" className="size-[16px]" />
-        </div>
-        <div className="flex flex-col items-start py-[4px] shrink-0">
-          <div className="flex gap-[8px] items-center">
-            <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#1e1e1e] text-[12px] leading-[15px] whitespace-nowrap">
-              248 AI search results for "{query || "your search"}"
-            </span>
-            <ArrowRight size={16} color="#1e1e1e" strokeWidth={1.5} />
+    <div className="fixed bottom-[24px] right-[80px] z-10 flex gap-[12px] items-center">
+      {/* Gradient AI card */}
+      <button
+        onClick={onTrySmartSearch}
+        className="flex flex-col items-start p-[8px] rounded-[4px] shrink-0 hover:opacity-90 transition-opacity shadow-[0_4px_16px_rgba(30,30,30,0.12)]"
+        style={{ backgroundImage: "linear-gradient(108.53deg, rgb(219,228,253) 0.23%, rgb(252,224,254) 100%)" }}
+      >
+        <div className="flex gap-[12px] items-center shrink-0 w-full">
+          <div
+            className="flex items-center justify-center rounded-[4px] shrink-0 size-[28px]"
+            style={{ backgroundImage: "linear-gradient(92.75deg, rgba(27,85,245,0.16) 0.23%, rgba(247,62,246,0.16) 100%)" }}
+          >
+            <img src={imgSmartSearchIcon} alt="" className="size-[16px]" />
+          </div>
+          <div className="flex flex-col items-start py-[4px] shrink-0">
+            <div className="flex gap-[8px] items-center">
+              <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#1e1e1e] text-[12px] leading-[15px] whitespace-nowrap">
+                248 AI search results for "{query || "your search"}"
+              </span>
+              <ChevronRight size={16} color="#1e1e1e" strokeWidth={1.5} />
+            </div>
           </div>
         </div>
-      </div>
-    </button>
+      </button>
+
+      {/* Back to top */}
+      <button
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        className="bg-white flex items-center justify-center rounded-full shrink-0 size-[36px] hover:bg-[#f8f8f8] transition-colors"
+        style={{ filter: "drop-shadow(-5px 10px 12.5px rgba(30,30,30,0.1))" }}
+      >
+        <ArrowRight size={20} color="#1e1e1e" strokeWidth={1.5} className="-rotate-90" />
+      </button>
+    </div>
   );
 }
 
