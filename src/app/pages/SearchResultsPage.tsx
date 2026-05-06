@@ -403,11 +403,11 @@ function SmartSearchBanner({ onSeeAll }: SmartSearchBannerProps) {
       className="w-fit rounded-[8px] overflow-hidden shrink-0"
       style={{ background: "linear-gradient(103.57deg, rgba(219,228,253,0.6) 0.23%, rgba(252,224,254,0.6) 100%), white" }}
     >
-      <div className="flex items-stretch gap-[16px] px-[20px] py-[16px]">
+      <div className="flex items-center gap-[16px] px-[20px] py-[16px]">
         {/* Left: 3 asset thumbnails — square, fill full height of the banner row */}
-        <div className="flex gap-[8px] self-stretch items-stretch shrink-0">
+        <div className="flex gap-[8px] items-center shrink-0">
           {BANNER_ASSETS.map((src, i) => (
-            <div key={i} className="aspect-square h-full rounded-[4px] overflow-hidden shrink-0">
+            <div key={i} className="rounded-[4px] overflow-hidden shrink-0" style={{ width: 92, height: 92 }}>
               <img alt="" src={src} className="w-full h-full object-cover block" />
             </div>
           ))}
