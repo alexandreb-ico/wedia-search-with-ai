@@ -452,32 +452,28 @@ interface StickySmartCardProps {
 
 function StickySmartCard({ query, onTrySmartSearch }: StickySmartCardProps) {
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-10 bg-white shadow-[0_-5px_15px_rgba(30,30,30,0.08)]">
-      <div className="px-[80px] py-[16px] flex items-center justify-end">
-        <button
-          onClick={onTrySmartSearch}
-          className="flex flex-col items-start p-[8px] rounded-[4px] shrink-0 hover:opacity-90 transition-opacity"
-          style={{ backgroundImage: "linear-gradient(108.53deg, rgb(219,228,253) 0.23%, rgb(252,224,254) 100%)" }}
+    <button
+      onClick={onTrySmartSearch}
+      className="fixed bottom-[24px] right-[80px] z-10 flex flex-col items-start p-[8px] rounded-[4px] shrink-0 hover:opacity-90 transition-opacity shadow-[0_4px_16px_rgba(30,30,30,0.12)]"
+      style={{ backgroundImage: "linear-gradient(108.53deg, rgb(219,228,253) 0.23%, rgb(252,224,254) 100%)" }}
+    >
+      <div className="flex gap-[12px] items-center shrink-0 w-full">
+        <div
+          className="flex items-center justify-center rounded-[4px] shrink-0 size-[28px]"
+          style={{ backgroundImage: "linear-gradient(92.75deg, rgba(27,85,245,0.16) 0.23%, rgba(247,62,246,0.16) 100%)" }}
         >
-          <div className="flex gap-[12px] items-center shrink-0 w-full">
-            <div
-              className="flex items-center justify-center rounded-[4px] shrink-0 size-[28px]"
-              style={{ backgroundImage: "linear-gradient(92.75deg, rgba(27,85,245,0.16) 0.23%, rgba(247,62,246,0.16) 100%)" }}
-            >
-              <img src={imgSmartSearchIcon} alt="" className="size-[16px]" />
-            </div>
-            <div className="flex flex-col items-start py-[4px] shrink-0">
-              <div className="flex gap-[8px] items-center">
-                <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#1e1e1e] text-[12px] leading-[15px] whitespace-nowrap">
-                  248 AI search results for "{query || "your search"}"
-                </span>
-                <ArrowRight size={16} color="#1e1e1e" strokeWidth={1.5} />
-              </div>
-            </div>
+          <img src={imgSmartSearchIcon} alt="" className="size-[16px]" />
+        </div>
+        <div className="flex flex-col items-start py-[4px] shrink-0">
+          <div className="flex gap-[8px] items-center">
+            <span style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#1e1e1e] text-[12px] leading-[15px] whitespace-nowrap">
+              248 AI search results for "{query || "your search"}"
+            </span>
+            <ArrowRight size={16} color="#1e1e1e" strokeWidth={1.5} />
           </div>
-        </button>
+        </div>
       </div>
-    </div>
+    </button>
   );
 }
 
@@ -763,7 +759,7 @@ export default function SearchResultsPage() {
   const showStickyCard = activeTab === "classic" && hasResults && !bannerVisible;
 
   return (
-    <div className={`bg-[#f8f8f8] flex flex-col min-h-screen ${showStickyCard ? "pb-[72px]" : ""}`}>
+    <div className="bg-[#f8f8f8] flex flex-col min-h-screen">
       <Navigation
         query={query}
         resultCount={classicCount + SMART_COUNT}
@@ -785,36 +781,19 @@ export default function SearchResultsPage() {
         {/* ── Classic tab ── */}
         {activeTab === "classic" && (
           <>
-            {hasResults ? (
-              <>
-                {/* Smart Search banner always at top when there are results */}
-                <div ref={bannerRef} className="w-full shrink-0">
-                  <SmartSearchBanner onSeeAll={switchToSmartTab} />
-                </div>
+            {/* Smart Search banner — always at top in both scenarios */}
+            <div ref={bannerRef} className="w-full shrink-0">
+              <SmartSearchBanner onSeeAll={switchToSmartTab} />
+            </div>
 
-                {/* Asset grid */}
-                <div className="flex flex-wrap gap-[16px] items-start w-full">
-                  <AssetCard selected={selectedIds.has(0)} onToggle={() => toggleCard(0)} />
-                  <AssetCardDigitalTemplate selected={selectedIds.has(1)} onToggle={() => toggleCard(1)} />
-                  {Array.from({ length: Math.min(classicCount - 2, EXTRA_CARDS) }).map((_, i) => (
-                    <AssetCard key={i + 2} selected={selectedIds.has(i + 2)} onToggle={() => toggleCard(i + 2)} />
-                  ))}
-                </div>
-              </>
-            ) : (
-              /* Zero results — nudge to Smart Search */
-              <div className="flex flex-col items-center justify-center w-full py-[80px] gap-[16px]">
-                <img src={imgSmartSearchIcon} alt="" className="size-[40px] opacity-40" />
-                <p style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#949494] text-[16px]">No classic results found.</p>
-                <button
-                  onClick={switchToSmartTab}
-                  className="flex items-center gap-[6px] px-[20px] py-[10px] rounded-[4px] text-white text-[14px]"
-                  style={{ background: PURPLE, fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }}
-                >
-                  <img src={imgSmartSearchIcon} alt="" className="size-[14px] brightness-[100] invert" />
-                  View Smart Search results
-                  <ChevronRight size={14} strokeWidth={1.5} />
-                </button>
+            {/* Asset grid — only when there are results */}
+            {hasResults && (
+              <div className="flex flex-wrap gap-[16px] items-start w-full">
+                <AssetCard selected={selectedIds.has(0)} onToggle={() => toggleCard(0)} />
+                <AssetCardDigitalTemplate selected={selectedIds.has(1)} onToggle={() => toggleCard(1)} />
+                {Array.from({ length: Math.min(classicCount - 2, EXTRA_CARDS) }).map((_, i) => (
+                  <AssetCard key={i + 2} selected={selectedIds.has(i + 2)} onToggle={() => toggleCard(i + 2)} />
+                ))}
               </div>
             )}
           </>
@@ -839,8 +818,22 @@ export default function SearchResultsPage() {
 
         {/* ── Portals tab ── */}
         {activeTab === "portals" && (
-          <div className="flex flex-col gap-[24px] w-full">
-            <PortalsBanner />
+          <div className="flex flex-wrap gap-[16px] items-start w-full">
+            {Array.from({ length: 9 }).map((_, i) => (
+              <div key={i} className="bg-white flex gap-[24px] items-center pl-[8px] pr-[24px] py-[8px] rounded-[4px] shrink-0 w-[416px]">
+                <div className="flex flex-col h-[104px] items-start justify-center shrink-0 w-[160px]">
+                  <img alt="" className="h-full w-full object-cover rounded-[2px]" src={imgAsset} />
+                </div>
+                <div className="flex flex-col gap-[16px] flex-1 py-[8px] min-w-0">
+                  <p style={{ fontFamily: "'Satoshi-Bold', sans-serif", fontWeight: 700 }} className="text-[#1e1e1e] text-[16px] leading-normal overflow-hidden text-ellipsis">
+                    {PORTALS[i % PORTALS.length].title}
+                  </p>
+                  <p style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#949494] text-[14px] leading-normal whitespace-nowrap">
+                    {PORTALS[i % PORTALS.length].count} assets
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </div>
