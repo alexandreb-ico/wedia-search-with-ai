@@ -8,6 +8,8 @@ import {
 } from "lucide-react";
 import svgPaths from "../../imports/DesktopWorkspacesInsideAWorkspaceAssetSelected/svg-qymjkh6ysf";
 import imgAsset from "../../imports/HomePage/asset-placeholder.jpg";
+import imgAsset2 from "../../imports/SequentialAskForApproval-2/1f4ef3aec255aeb4e4d3be203c116b68dace0e97.png";
+import imgAsset3 from "../../imports/SequentialAskForApproval-2/35b7233f134a6e353630a725a80102c39df93615.png";
 import imgLogoDark from "../../imports/HomePage/logo-wedia-dark.svg";
 import imgSmartSearchIcon from "../../imports/HomePage/smart-search-icon.svg";
 
@@ -393,25 +395,27 @@ interface SmartSearchBannerProps {
   onSeeAll: () => void;
 }
 
+const BANNER_ASSETS = [imgAsset, imgAsset2, imgAsset3];
+
 function SmartSearchBanner({ onSeeAll }: SmartSearchBannerProps) {
   return (
     <div
-      className="w-full rounded-[8px] overflow-hidden shrink-0"
+      className="self-start rounded-[8px] overflow-hidden shrink-0"
       style={{ background: "linear-gradient(103.57deg, rgba(219,228,253,0.6) 0.23%, rgba(252,224,254,0.6) 100%), white" }}
     >
       <div className="flex items-center gap-[16px] px-[20px] py-[16px]">
-        {/* Left: 3 asset thumbnails */}
-        <div className="flex flex-wrap gap-x-[16px] gap-y-[8px] items-center justify-end self-stretch shrink-0">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="relative rounded-[4px] shrink-0 overflow-hidden" style={{ width: 91, height: 91 }}>
-              <img alt="" className="absolute inset-0 object-cover size-full" src={imgAsset} />
+        {/* Left: 3 asset thumbnails — different images */}
+        <div className="flex gap-[8px] items-center shrink-0">
+          {BANNER_ASSETS.map((src, i) => (
+            <div key={i} className="relative rounded-[4px] shrink-0 overflow-hidden" style={{ width: 72, height: 72 }}>
+              <img alt="" className="absolute inset-0 object-cover size-full" src={src} />
             </div>
           ))}
         </div>
 
         {/* Right: text + button */}
-        <div className="flex flex-col gap-[20px] shrink-0">
-          <div className="flex flex-col gap-[12px]">
+        <div className="flex flex-col gap-[16px] shrink-0">
+          <div className="flex flex-col gap-[8px]">
             <div className="flex items-center gap-[12px]">
               <SmartSearchIcon color="#1e1e1e" size={16} />
               <span style={{ fontFamily: "'Satoshi-Bold', sans-serif", fontWeight: 700 }} className="text-[#1e1e1e] text-[16px] leading-[20px] whitespace-nowrap">Smart search results</span>
