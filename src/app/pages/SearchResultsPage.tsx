@@ -498,7 +498,7 @@ interface AssetCardProps { selected: boolean; onToggle: () => void; }
 function AssetCard({ selected, onToggle }: AssetCardProps) {
   if (selected) {
     return (
-      <div className="border-[3px] border-[#3377ff] relative rounded-[4px] shrink-0 size-[243px] overflow-hidden cursor-pointer" onClick={onToggle}>
+      <div className="border-[3px] border-[#3377ff] relative rounded-[4px] w-full aspect-square overflow-hidden cursor-pointer" onClick={onToggle}>
         <img alt="" className="absolute inset-0 object-cover size-full" src={imgAsset} />
         <div className="absolute inset-0 flex items-start justify-between p-[16px]">
           <div className="bg-[#1b55f5] flex items-center justify-center rounded-full shrink-0 size-[20px]">
@@ -516,7 +516,7 @@ function AssetCard({ selected, onToggle }: AssetCardProps) {
     );
   }
   return (
-    <div className="group relative rounded-[4px] shrink-0 size-[243px] overflow-hidden cursor-pointer">
+    <div className="group relative rounded-[4px] w-full aspect-square overflow-hidden cursor-pointer">
       <img alt="" className="absolute inset-0 object-cover size-full" src={imgAsset} />
       <div className="absolute inset-0 flex items-start justify-end p-[16px] group-hover:opacity-0 transition-opacity">
         <StatusDot />
@@ -548,7 +548,7 @@ interface AssetCardDigitalTemplateProps { selected: boolean; onToggle: () => voi
 function AssetCardDigitalTemplate({ selected, onToggle }: AssetCardDigitalTemplateProps) {
   if (selected) {
     return (
-      <div className="border-[3px] border-[#3377ff] relative rounded-[4px] shrink-0 size-[243px] overflow-hidden cursor-pointer" onClick={onToggle}>
+      <div className="border-[3px] border-[#3377ff] relative rounded-[4px] w-full aspect-square overflow-hidden cursor-pointer" onClick={onToggle}>
         <img alt="" className="absolute inset-0 object-cover size-full" src={imgAsset} />
         <div className="absolute inset-0 flex flex-col items-start justify-between p-[16px]">
           <div className="flex items-start justify-between w-full">
@@ -569,7 +569,7 @@ function AssetCardDigitalTemplate({ selected, onToggle }: AssetCardDigitalTempla
     );
   }
   return (
-    <div className="group relative rounded-[4px] shrink-0 size-[243px] overflow-hidden cursor-pointer">
+    <div className="group relative rounded-[4px] w-full aspect-square overflow-hidden cursor-pointer">
       <img alt="" className="absolute inset-0 object-cover size-full" src={imgAsset} />
       <div className="absolute inset-0 flex flex-col items-start justify-between p-[16px] group-hover:opacity-0 transition-opacity">
         <div className="flex w-full justify-end"><StatusDot /></div>
@@ -793,7 +793,7 @@ export default function SearchResultsPage() {
       />
 
       {/* ── Sticky filter bar (sticks below navigation) ── */}
-      <div className="sticky top-[72px] z-10 bg-[#f8f8f8] px-[80px] pt-[16px] pb-[16px] w-full">
+      <div className="sticky top-[72px] z-10 bg-[#f8f8f8] px-[80px] pt-[16px] w-full">
         <FilterBar
           activeTab={activeTab}
           onTabChange={setActiveTab}
@@ -811,7 +811,7 @@ export default function SearchResultsPage() {
       <div className="flex flex-col gap-[24px] items-start px-[80px] pb-[40px] pt-[0px] w-full">
 
         {/* Bottom controls row (non-sticky) */}
-        <div className="flex items-center justify-between w-full">
+        <div className="flex items-center justify-between w-full mt-[16px]">
           <div className="flex gap-[8px] items-center shrink-0">
             {selectedIds.size > 0 ? (
               <>
@@ -874,7 +874,7 @@ export default function SearchResultsPage() {
 
             {/* Asset grid — only when there are results */}
             {hasResults && (
-              <div className="flex flex-wrap gap-[16px] items-start w-full">
+              <div className="w-full" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: 16 }}>
                 <AssetCard selected={selectedIds.has(0)} onToggle={() => toggleCard(0)} />
                 <AssetCardDigitalTemplate selected={selectedIds.has(1)} onToggle={() => toggleCard(1)} />
                 {Array.from({ length: Math.min(classicCount - 2, EXTRA_CARDS) }).map((_, i) => (
@@ -888,7 +888,7 @@ export default function SearchResultsPage() {
         {/* ── Smart Search tab ── */}
         {activeTab === "smart" && (
           <div className="flex flex-col gap-[16px] w-full">
-            <div className="flex flex-wrap gap-[16px] items-start w-full">
+            <div className="w-full" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: 16 }}>
               {Array.from({ length: 19 }).map((_, i) => (
                 <AssetCard key={i} selected={false} onToggle={() => {}} />
               ))}
