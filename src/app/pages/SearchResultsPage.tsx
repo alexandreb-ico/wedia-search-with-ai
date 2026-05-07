@@ -878,7 +878,7 @@ export default function SearchResultsPage() {
 
             {/* Asset grid — only when there are results */}
             {hasResults && (
-              <div className="w-full" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: 16 }}>
+              <div className="w-full" style={{ display: "grid", gridTemplateColumns: "repeat(6, 1fr)", gap: 16 }}>
                 <AssetCard selected={selectedIds.has(0)} onToggle={() => toggleCard(0)} />
                 <AssetCardDigitalTemplate selected={selectedIds.has(1)} onToggle={() => toggleCard(1)} />
                 {Array.from({ length: Math.min(classicCount - 2, EXTRA_CARDS) }).map((_, i) => (
@@ -892,7 +892,7 @@ export default function SearchResultsPage() {
         {/* ── Smart Search tab ── */}
         {activeTab === "smart" && (
           <div className="flex flex-col gap-[16px] w-full">
-            <div className="w-full" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: 16 }}>
+            <div className="w-full" style={{ display: "grid", gridTemplateColumns: "repeat(6, 1fr)", gap: 16 }}>
               {Array.from({ length: 19 }).map((_, i) => (
                 <AssetCard key={i} selected={false} onToggle={() => {}} />
               ))}
