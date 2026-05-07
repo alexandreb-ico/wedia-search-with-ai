@@ -20,7 +20,7 @@ type Tab = "classic" | "smart" | "portals";
 
 const SCENARIO_CONFIG: Record<Scenario, { classicCount: number; label: string; sublabel: string }> = {
   zero:    { classicCount: 0,  label: "0 results",  sublabel: "→ Smart Search tab" },
-  results: { classicCount: 12, label: "Has results", sublabel: "→ Classic tab" },
+  results: { classicCount: 25, label: "Has results", sublabel: "→ Classic tab" },
 };
 const SMART_COUNT = 200;
 const PURPLE = "#813de0";
@@ -711,7 +711,7 @@ function Footer() {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-const EXTRA_CARDS = 17;
+const EXTRA_CARDS = 23;
 const ALL_CLASSIC_IDS = [0, 1, ...Array.from({ length: EXTRA_CARDS }, (_, i) => i + 2)];
 const PORTALS_COUNT = 9;
 
