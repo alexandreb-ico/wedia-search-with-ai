@@ -10,6 +10,9 @@ import svgPaths from "../../imports/DesktopWorkspacesInsideAWorkspaceAssetSelect
 import imgAsset from "../../imports/HomePage/asset-placeholder.jpg";
 import imgAsset2 from "../../imports/SequentialAskForApproval-2/1f4ef3aec255aeb4e4d3be203c116b68dace0e97.png";
 import imgAsset3 from "../../imports/SequentialAskForApproval-2/35b7233f134a6e353630a725a80102c39df93615.png";
+import imgAsset4 from "../../imports/SequentialAskForApproval-2/3118d88c6353094407af3ed6eafa836229239399.png";
+import imgAsset5 from "../../imports/SequentialAskForApproval-2/d3723f267f978c7e6e9b60b93dbe02a7b87b798c.png";
+import imgAsset6 from "../../imports/SequentialAskForApproval-2/3e68748f36bf71c3390c2028f03213684f30f2a8.png";
 import imgLogoDark from "../../imports/HomePage/logo-wedia-dark.svg";
 import imgSmartSearchIcon from "../../imports/HomePage/smart-search-icon.svg";
 
@@ -403,7 +406,7 @@ interface SmartSearchBannerProps {
   onSeeAll: () => void;
 }
 
-const BANNER_ASSETS = [imgAsset, imgAsset2, imgAsset3, imgAsset, imgAsset2, imgAsset3];
+const BANNER_ASSETS = [imgAsset2, imgAsset3, imgAsset4, imgAsset5, imgAsset6, imgAsset];
 
 function SmartSearchBanner({ onSeeAll }: SmartSearchBannerProps) {
   return (
