@@ -203,18 +203,13 @@ function ActiveFilterChip({ label, value, onRemove }: { label: string; value: st
 }
 
 interface FilterBarProps {
-  activeTab: Tab;
-  onTabChange: (t: Tab) => void;
-  classicCount: number;
-  smartCount: number;
-  portalsCount: number;
   activeFilters: { label: string; value: string }[];
   onFilterClick: (label: string) => void;
   onRemoveFilter: (label: string) => void;
   onClearFilters: () => void;
 }
 
-function FilterBar({ activeTab, onTabChange, classicCount, smartCount, portalsCount, activeFilters, onFilterClick, onRemoveFilter, onClearFilters }: FilterBarProps) {
+function FilterBar({ activeFilters, onFilterClick, onRemoveFilter, onClearFilters }: FilterBarProps) {
   return (
     <div className="flex flex-col items-start w-full shrink-0">
       {/* Filter pills row */}
@@ -251,82 +246,95 @@ function FilterBar({ activeTab, onTabChange, classicCount, smartCount, portalsCo
           </div>
         </div>
       )}
+    </div>
+  );
+}
 
-      {/* Tab row */}
-      <div className="flex items-end w-full border-b border-[#e4e4e4]">
-        {/* Classic tab */}
-        <button
-          onClick={() => onTabChange("classic")}
-          className="flex items-center gap-[8px] px-[4px] pb-[10px] mr-[24px] relative"
-          style={{ borderBottom: activeTab === "classic" ? "2px solid #1b55f5" : "2px solid transparent", marginBottom: -1 }}
-        >
-          <span
-            style={{ fontFamily: "'Satoshi-Bold', sans-serif", fontWeight: 700, color: activeTab === "classic" ? "#1e1e1e" : "#949494" }}
-            className="text-[16px] leading-[20px] whitespace-nowrap transition-colors"
-          >
-            Classic search
-          </span>
-          <span
-            className="text-[12px] leading-[15px] px-[6px] py-[4px] rounded-full"
-            style={{
-              fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500,
-              background: activeTab === "classic" ? "#e4e4e4" : "#f0f0f0",
-              color: activeTab === "classic" ? "#1e1e1e" : "#949494",
-            }}
-          >
-            {classicCount}
-          </span>
-        </button>
+// ─── Tab row (shared between sticky + non-sticky contexts) ────────────────────
 
-        {/* Smart Search tab */}
-        <button
-          onClick={() => onTabChange("smart")}
-          className="flex items-center gap-[6px] px-[4px] pb-[10px] mr-[24px] relative"
-          style={{ borderBottom: activeTab === "smart" ? `2px solid ${PURPLE}` : "2px solid transparent", marginBottom: -1 }}
-        >
-          <SmartSearchIcon color={activeTab === "smart" ? PURPLE : "#949494"} size={14} />
-          <span
-            style={{ fontFamily: "'Satoshi-Bold', sans-serif", fontWeight: 700, color: activeTab === "smart" ? PURPLE : "#949494" }}
-            className="text-[16px] leading-[20px] whitespace-nowrap transition-colors"
-          >
-            Smart Search
-          </span>
-          <span
-            className="text-[12px] leading-[15px] px-[6px] py-[4px] rounded-full"
-            style={{
-              fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500,
-              background: activeTab === "smart" ? PURPLE : `${PURPLE_LIGHT}22`,
-              color: activeTab === "smart" ? "white" : PURPLE_LIGHT,
-            }}
-          >
-            {smartCount}
-          </span>
-        </button>
+interface TabsRowProps {
+  activeTab: Tab;
+  onTabChange: (t: Tab) => void;
+  classicCount: number;
+  smartCount: number;
+  portalsCount: number;
+}
 
-        {/* Portals tab */}
-        <button
-          onClick={() => onTabChange("portals")}
-          className="flex items-center gap-[8px] px-[4px] pb-[10px] relative"
-          style={{ borderBottom: activeTab === "portals" ? "2px solid #1b55f5" : "2px solid transparent", marginBottom: -1 }}
+function TabsRow({ activeTab, onTabChange, classicCount, smartCount, portalsCount }: TabsRowProps) {
+  return (
+    <div className="flex items-end w-full border-b border-[#e4e4e4]">
+      {/* Classic tab */}
+      <button
+        onClick={() => onTabChange("classic")}
+        className="flex items-center gap-[8px] px-[4px] pb-[10px] mr-[24px] relative"
+        style={{ borderBottom: activeTab === "classic" ? "2px solid #1b55f5" : "2px solid transparent", marginBottom: -1 }}
+      >
+        <span
+          style={{ fontFamily: "'Satoshi-Bold', sans-serif", fontWeight: 700, color: activeTab === "classic" ? "#1e1e1e" : "#949494" }}
+          className="text-[16px] leading-[20px] whitespace-nowrap transition-colors"
         >
-          <span
-            style={{ fontFamily: "'Satoshi-Bold', sans-serif", fontWeight: 700, color: activeTab === "portals" ? "#1e1e1e" : "#949494" }}
-            className="text-[16px] leading-[20px] whitespace-nowrap transition-colors"
-          >
-            Portals
-          </span>
-          <span
-            className="text-[12px] leading-[15px] px-[6px] py-[4px] rounded-full"
-            style={{
-              fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500,
-              background: activeTab === "portals" ? "#e4e4e4" : "#f0f0f0",
-              color: activeTab === "portals" ? "#1e1e1e" : "#949494",
-            }}
-          >
-            {portalsCount}
-          </span>
-        </button>
-      </div>
+          Classic search
+        </span>
+        <span
+          className="text-[12px] leading-[15px] px-[6px] py-[4px] rounded-full"
+          style={{
+            fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500,
+            background: activeTab === "classic" ? "#e4e4e4" : "#f0f0f0",
+            color: activeTab === "classic" ? "#1e1e1e" : "#949494",
+          }}
+        >
+          {classicCount}
+        </span>
+      </button>
+
+      {/* Smart Search tab */}
+      <button
+        onClick={() => onTabChange("smart")}
+        className="flex items-center gap-[6px] px-[4px] pb-[10px] mr-[24px] relative"
+        style={{ borderBottom: activeTab === "smart" ? `2px solid ${PURPLE}` : "2px solid transparent", marginBottom: -1 }}
+      >
+        <SmartSearchIcon color={activeTab === "smart" ? PURPLE : "#949494"} size={14} />
+        <span
+          style={{ fontFamily: "'Satoshi-Bold', sans-serif", fontWeight: 700, color: activeTab === "smart" ? PURPLE : "#949494" }}
+          className="text-[16px] leading-[20px] whitespace-nowrap transition-colors"
+        >
+          Smart Search
+        </span>
+        <span
+          className="text-[12px] leading-[15px] px-[6px] py-[4px] rounded-full"
+          style={{
+            fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500,
+            background: activeTab === "smart" ? PURPLE : `${PURPLE_LIGHT}22`,
+            color: activeTab === "smart" ? "white" : PURPLE_LIGHT,
+          }}
+        >
+          {smartCount}
+        </span>
+      </button>
+
+      {/* Portals tab */}
+      <button
+        onClick={() => onTabChange("portals")}
+        className="flex items-center gap-[8px] px-[4px] pb-[10px] relative"
+        style={{ borderBottom: activeTab === "portals" ? "2px solid #1b55f5" : "2px solid transparent", marginBottom: -1 }}
+      >
+        <span
+          style={{ fontFamily: "'Satoshi-Bold', sans-serif", fontWeight: 700, color: activeTab === "portals" ? "#1e1e1e" : "#949494" }}
+          className="text-[16px] leading-[20px] whitespace-nowrap transition-colors"
+        >
+          Portals
+        </span>
+        <span
+          className="text-[12px] leading-[15px] px-[6px] py-[4px] rounded-full"
+          style={{
+            fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500,
+            background: activeTab === "portals" ? "#e4e4e4" : "#f0f0f0",
+            color: activeTab === "portals" ? "#1e1e1e" : "#949494",
+          }}
+        >
+          {portalsCount}
+        </span>
+      </button>
     </div>
   );
 }
@@ -724,7 +732,15 @@ export default function SearchResultsPage() {
   const [selectedIds, setSelectedIds] = React.useState<Set<number>>(new Set());
   const [bannerVisible, setBannerVisible] = React.useState(true);
   const [activeFilters, setActiveFilters] = React.useState<{ label: string; value: string }[]>([]);
+  const [isScrolled, setIsScrolled] = React.useState(false);
   const bannerRef = React.useRef<HTMLDivElement>(null);
+
+  // Track scroll to collapse tabs
+  React.useEffect(() => {
+    function onScroll() { setIsScrolled(window.scrollY > 10); }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const classicCount = SCENARIO_CONFIG[scenario].classicCount;
   const hasResults = classicCount > 0;
@@ -796,26 +812,39 @@ export default function SearchResultsPage() {
         onSearch={handleSearch}
       />
 
-      {/* ── Sticky filter bar (sticks below navigation) ── */}
-      <div className="sticky top-[72px] z-10 bg-[#f8f8f8] px-[80px] pt-[16px] w-full">
-        <FilterBar
-          activeTab={activeTab}
-          onTabChange={setActiveTab}
-          classicCount={classicCount}
-          smartCount={SMART_COUNT}
-          portalsCount={PORTALS_COUNT}
-          activeFilters={activeFilters}
-          onFilterClick={handleFilterClick}
-          onRemoveFilter={handleRemoveFilter}
-          onClearFilters={handleClearFilters}
-        />
-      </div>
+      {/* ── Sticky section: filter bar + tabs (collapsible) + selection bar ── */}
+      <div className="sticky top-[72px] z-10 bg-[#f8f8f8] w-full">
+        {/* Filter pills */}
+        <div className="px-[80px] pt-[16px]">
+          <FilterBar
+            activeFilters={activeFilters}
+            onFilterClick={handleFilterClick}
+            onRemoveFilter={handleRemoveFilter}
+            onClearFilters={handleClearFilters}
+          />
+        </div>
 
-      {/* ── Scrollable content ── */}
-      <div className="flex flex-col gap-[24px] items-start px-[80px] pb-[40px] pt-[0px] w-full">
+        {/* Tabs — slide up and disappear when scrolled */}
+        <div
+          className="overflow-hidden"
+          style={{
+            maxHeight: isScrolled ? "0px" : "64px",
+            transition: "max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+          }}
+        >
+          <div className="px-[80px]">
+            <TabsRow
+              activeTab={activeTab}
+              onTabChange={setActiveTab}
+              classicCount={classicCount}
+              smartCount={SMART_COUNT}
+              portalsCount={PORTALS_COUNT}
+            />
+          </div>
+        </div>
 
-        {/* Bottom controls row (non-sticky) */}
-        <div className="flex items-center justify-between w-full mt-[16px]">
+        {/* Selection / sorting bar — always visible in sticky */}
+        <div className="flex items-center justify-between px-[80px] py-[12px] w-full">
           <div className="flex gap-[8px] items-center shrink-0">
             {selectedIds.size > 0 ? (
               <>
@@ -867,6 +896,10 @@ export default function SearchResultsPage() {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* ── Scrollable content ── */}
+      <div className="flex flex-col gap-[24px] items-start px-[80px] pb-[40px] pt-[0px] w-full">
 
         {/* ── Classic tab ── */}
         {activeTab === "classic" && (
