@@ -296,9 +296,9 @@ function TabsRow({ activeTab, onTabChange, classicCount, smartCount, portalsCoun
         className="flex items-center gap-[6px] px-[4px] pb-[10px] mr-[24px] relative"
         style={{ borderBottom: activeTab === "smart" ? `2px solid ${PURPLE}` : "2px solid transparent", marginBottom: -1 }}
       >
-        <SmartSearchIcon color={activeTab === "smart" ? PURPLE : "#949494"} size={14} />
+        <SmartSearchIcon color={activeTab === "smart" ? PURPLE : PURPLE_LIGHT} size={14} />
         <span
-          style={{ fontFamily: "'Satoshi-Bold', sans-serif", fontWeight: 700, color: activeTab === "smart" ? PURPLE : "#949494" }}
+          style={{ fontFamily: "'Satoshi-Bold', sans-serif", fontWeight: 700, color: activeTab === "smart" ? PURPLE : PURPLE_LIGHT }}
           className="text-[16px] leading-[20px] whitespace-nowrap transition-colors"
         >
           Smart Search
@@ -307,8 +307,8 @@ function TabsRow({ activeTab, onTabChange, classicCount, smartCount, portalsCoun
           className="text-[12px] leading-[15px] px-[6px] py-[4px] rounded-full"
           style={{
             fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500,
-            background: activeTab === "smart" ? PURPLE : `${PURPLE_LIGHT}22`,
-            color: activeTab === "smart" ? "white" : PURPLE_LIGHT,
+            background: activeTab === "smart" ? PURPLE : "#d1b8fa",
+            color: "white",
           }}
         >
           {smartCount}
