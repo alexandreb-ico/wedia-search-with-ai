@@ -403,32 +403,34 @@ interface SmartSearchBannerProps {
   onSeeAll: () => void;
 }
 
-const BANNER_ASSETS = [imgAsset, imgAsset2, imgAsset3];
+const BANNER_ASSETS = [imgAsset, imgAsset2, imgAsset3, imgAsset, imgAsset2, imgAsset3];
 
 function SmartSearchBanner({ onSeeAll }: SmartSearchBannerProps) {
   return (
     <div
-      className="w-fit rounded-[8px] overflow-hidden shrink-0"
-      style={{ background: "linear-gradient(103.57deg, rgba(219,228,253,0.6) 0.23%, rgba(252,224,254,0.6) 100%), white" }}
+      className="w-full rounded-[8px] overflow-hidden"
+      style={{ background: "linear-gradient(110.53deg, rgba(252,224,254,0.6) 0.21%, rgba(219,228,253,0.6) 69.27%), white" }}
     >
-      <div className="flex items-center gap-[16px] px-[20px] py-[16px]">
-        {/* Left: 3 asset thumbnails — square, fill full height of the banner row */}
+      <div className="flex items-center gap-[28px] pl-[12px] pr-[20px] py-[12px]">
+        {/* Left: 6 asset thumbnails 126×126px */}
         <div className="flex gap-[8px] items-center shrink-0">
           {BANNER_ASSETS.map((src, i) => (
-            <div key={i} className="rounded-[4px] overflow-hidden shrink-0" style={{ width: 92, height: 92 }}>
+            <div key={i} className="rounded-[4px] overflow-hidden shrink-0" style={{ width: 126, height: 126 }}>
               <img alt="" src={src} className="w-full h-full object-cover block" />
             </div>
           ))}
         </div>
 
         {/* Right: text + button */}
-        <div className="flex flex-col gap-[16px] shrink-0">
-          <div className="flex flex-col gap-[8px]">
+        <div className="flex flex-col gap-[20px] flex-1 min-w-0">
+          <div className="flex flex-col gap-[12px]">
             <div className="flex items-center gap-[12px]">
               <SmartSearchIcon color="#1e1e1e" size={16} />
               <span style={{ fontFamily: "'Satoshi-Bold', sans-serif", fontWeight: 700 }} className="text-[#1e1e1e] text-[16px] leading-[20px] whitespace-nowrap">Smart search results</span>
-              <span className="text-[12px] px-[6px] py-[4px] rounded-full text-[#1e1e1e] leading-[15px]" style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500, background: "#e4e4e4" }}>40+</span>
-              <ChevronRight size={16} color="#1e1e1e" strokeWidth={1.5} />
+              <div className="flex items-center gap-[8px] shrink-0">
+                <span className="bg-white text-[12px] px-[6px] py-[4px] rounded-full text-[#1e1e1e] leading-[15px]" style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }}>40+</span>
+                <ChevronRight size={16} color="#1e1e1e" strokeWidth={1.5} />
+              </div>
             </div>
             <p style={{ fontFamily: "'Satoshi-Medium', sans-serif", fontWeight: 500 }} className="text-[#646464] text-[14px] leading-[18px] whitespace-nowrap">
               Visual and semantic similarity based search
@@ -905,7 +907,7 @@ export default function SearchResultsPage() {
         {activeTab === "classic" && (
           <>
             {/* Smart Search banner */}
-            <div ref={bannerRef} className="shrink-0 self-start">
+            <div ref={bannerRef} className="w-full shrink-0">
               <SmartSearchBanner onSeeAll={switchToSmartTab} />
             </div>
 
